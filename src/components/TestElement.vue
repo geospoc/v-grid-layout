@@ -3,7 +3,6 @@
     {{ text }}
   </span>
 </template>
-<style></style>
 <script>
   export default {
     name: 'TestElement',
