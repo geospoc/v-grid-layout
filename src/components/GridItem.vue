@@ -262,140 +262,123 @@
         this.tryMakeResizable();
       },
       '$parent.margin'(margin) {
-        if (
-          !margin ||
-          (margin[0] == this.margin[0] && margin[1] == this.margin[1])
-        ) {
+        const t = this;
+        if (!margin || (margin[0] == t.margin[0] && margin[1] == t.margin[1])) {
           return;
         }
-        this.margin = margin.map((m) => Number(m));
-        this.createStyle();
-        this.emitContainerResized();
+        t.margin = margin.map((m) => Number(m));
+        t.createStyle();
+        t.emitContainerResized();
       },
     },
     created() {
-      let t = this;
-
-      // Accessible refernces of functions for removing in beforeDestroy
-      t.updateWidthHandler = function (width) {
+      const t = this;
+      // Accessible references of functions for removing in beforeDestroy
+      t.updateWidthHandler = (width) => {
         t.updateWidth(width);
       };
-
-      t.compactHandler = function (layout) {
+      t.compactHandler = (layout) => {
         t.compact(layout);
       };
-
-      t.setDraggableHandler = function (isDraggable) {
+      t.setDraggableHandler = (isDraggable) => {
         if (t.isDraggable === null) {
           t.draggable = isDraggable;
         }
       };
-
-      t.setResizableHandler = function (isResizable) {
+      t.setResizableHandler = (isResizable) => {
         if (t.isResizable === null) {
           t.resizable = isResizable;
         }
       };
-
-      t.setRowHeightHandler = function (rowHeight) {
+      t.setRowHeightHandler = (rowHeight) => {
         t.rowHeight = rowHeight;
       };
-
-      t.setMaxRowsHandler = function (maxRows) {
+      t.setMaxRowsHandler = (maxRows) => {
         t.maxRows = maxRows;
       };
-
       t.directionchangeHandler = () => {
-        this.rtl = getDocumentDir() === 'rtl';
-        this.compact();
+        t.rtl = getDocumentDir() === 'rtl';
+        t.compact();
       };
-
       t.setColNum = (colNum) => {
         t.cols = parseInt(colNum);
       };
-
-      this.eventBus.$on('updateWidth', t.updateWidthHandler);
-      this.eventBus.$on('compact', t.compactHandler);
-      this.eventBus.$on('setDraggable', t.setDraggableHandler);
-      this.eventBus.$on('setResizable', t.setResizableHandler);
-      this.eventBus.$on('setRowHeight', t.setRowHeightHandler);
-      this.eventBus.$on('setMaxRows', t.setMaxRowsHandler);
-      this.eventBus.$on('directionchange', t.directionchangeHandler);
-      this.eventBus.$on('setColNum', t.setColNum);
-
-      this.rtl = getDocumentDir() === 'rtl';
+      t.eventBus.$on('updateWidth', t.updateWidthHandler);
+      t.eventBus.$on('compact', t.compactHandler);
+      t.eventBus.$on('setDraggable', t.setDraggableHandler);
+      t.eventBus.$on('setResizable', t.setResizableHandler);
+      t.eventBus.$on('setRowHeight', t.setRowHeightHandler);
+      t.eventBus.$on('setMaxRows', t.setMaxRowsHandler);
+      t.eventBus.$on('directionchange', t.directionchangeHandler);
+      t.eventBus.$on('setColNum', t.setColNum);
+      t.rtl = getDocumentDir() === 'rtl';
     },
     beforeDestroy() {
-      let t = this;
+      const t = this;
       //Remove listeners
-      this.eventBus.$off('updateWidth', t.updateWidthHandler);
-      this.eventBus.$off('compact', t.compactHandler);
-      this.eventBus.$off('setDraggable', t.setDraggableHandler);
-      this.eventBus.$off('setResizable', t.setResizableHandler);
-      this.eventBus.$off('setRowHeight', t.setRowHeightHandler);
-      this.eventBus.$off('setMaxRows', t.setMaxRowsHandler);
-      this.eventBus.$off('directionchange', t.directionchangeHandler);
-      this.eventBus.$off('setColNum', t.setColNum);
-      if (this.interactObj) {
-        this.interactObj.unset(); // destroy interact intance
+      t.eventBus.$off('updateWidth', t.updateWidthHandler);
+      t.eventBus.$off('compact', t.compactHandler);
+      t.eventBus.$off('setDraggable', t.setDraggableHandler);
+      t.eventBus.$off('setResizable', t.setResizableHandler);
+      t.eventBus.$off('setRowHeight', t.setRowHeightHandler);
+      t.eventBus.$off('setMaxRows', t.setMaxRowsHandler);
+      t.eventBus.$off('directionchange', t.directionchangeHandler);
+      t.eventBus.$off('setColNum', t.setColNum);
+      if (t.interactObj) {
+        t.interactObj.unset(); // destroy interact intance
       }
     },
     mounted() {
-      this.cols = this.$parent.colNum;
-      this.rowHeight = this.$parent.rowHeight;
-      this.containerWidth =
-        this.$parent.width !== null ? this.$parent.width : 100;
-      this.margin =
-        this.$parent.margin !== undefined ? this.$parent.margin : [10, 10];
-      this.maxRows = this.$parent.maxRows;
-      if (this.isDraggable === null) {
-        this.draggable = this.$parent.isDraggable;
+      const t = this;
+      t.cols = t.$parent.colNum;
+      t.rowHeight = t.$parent.rowHeight;
+      t.containerWidth = t.$parent.width !== null ? t.$parent.width : 100;
+      t.margin = t.$parent.margin !== undefined ? t.$parent.margin : [10, 10];
+      t.maxRows = t.$parent.maxRows;
+      if (t.isDraggable === null) {
+        t.draggable = t.$parent.isDraggable;
       } else {
-        this.draggable = this.isDraggable;
+        t.draggable = t.isDraggable;
       }
-      if (this.isResizable === null) {
-        this.resizable = this.$parent.isResizable;
+      if (t.isResizable === null) {
+        t.resizable = t.$parent.isResizable;
       } else {
-        this.resizable = this.isResizable;
+        t.resizable = t.isResizable;
       }
-      this.useCssTransforms = this.$parent.useCssTransforms;
-      this.createStyle();
+      t.useCssTransforms = t.$parent.useCssTransforms;
+      t.createStyle();
     },
     methods: {
       createStyle() {
-        if (this.x + this.w > this.cols) {
-          this.innerX = 0;
-          this.innerW = this.w > this.cols ? this.cols : this.w;
+        const t = this;
+        if (t.x + t.w > t.cols) {
+          t.innerX = 0;
+          t.innerW = t.w > t.cols ? t.cols : t.w;
         } else {
-          this.innerX = this.x;
-          this.innerW = this.w;
+          t.innerX = t.x;
+          t.innerW = t.w;
         }
-        let pos = this.calcPosition(
-          this.innerX,
-          this.innerY,
-          this.innerW,
-          this.innerH,
-        );
+        let pos = t.calcPosition(t.innerX, t.innerY, t.innerW, t.innerH);
 
-        if (this.isDragging) {
-          pos.top = this.dragging.top;
+        if (t.isDragging) {
+          pos.top = t.dragging.top;
           //                    Add rtl support
-          if (this.renderRtl) {
-            pos.right = this.dragging.left;
+          if (t.renderRtl) {
+            pos.right = t.dragging.left;
           } else {
-            pos.left = this.dragging.left;
+            pos.left = t.dragging.left;
           }
         }
-        if (this.isResizing) {
-          pos.width = this.resizing.width;
-          pos.height = this.resizing.height;
+        if (t.isResizing) {
+          pos.width = t.resizing.width;
+          pos.height = t.resizing.height;
         }
 
         let style;
         // CSS Transforms support (default)
-        if (this.useCssTransforms) {
+        if (t.useCssTransforms) {
           //                    Add rtl support
-          if (this.renderRtl) {
+          if (t.renderRtl) {
             style = setTransformRtl(pos.top, pos.right, pos.width, pos.height);
           } else {
             style = setTransform(pos.top, pos.left, pos.width, pos.height);
@@ -403,37 +386,39 @@
         } else {
           // top,left (slow)
           //                    Add rtl support
-          if (this.renderRtl) {
+          if (t.renderRtl) {
             style = setTopRight(pos.top, pos.right, pos.width, pos.height);
           } else {
             style = setTopLeft(pos.top, pos.left, pos.width, pos.height);
           }
         }
-        this.style = style;
+        t.style = style;
       },
       emitContainerResized() {
+        const t = this;
         // this.style has width and height with trailing 'px'. The
         // resized event is without them
         let styleProps = {};
         for (let prop of ['width', 'height']) {
-          let val = this.style[prop];
+          let val = t.style[prop];
           let matches = val.match(/^(\d+)px$/);
           if (!matches) return;
           styleProps[prop] = matches[1];
         }
-        this.$emit(
+        t.$emit(
           'container-resized',
-          this.i,
-          this.h,
-          this.w,
+          t.i,
+          t.h,
+          t.w,
           styleProps.height,
           styleProps.width,
         );
       },
       handleResize(event) {
-        if (this.static) return;
+        const t = this;
+        if (t.static) return;
         const position = getControlPosition(event);
-        // Get the current drag point from the event. This is used as the offset.
+        // Get the current drag point from the event. t is used as the offset.
         if (position == null) return; // not possible but satisfies flow
         const { x, y } = position;
 
@@ -441,64 +426,54 @@
         let pos;
         switch (event.type) {
           case 'resizestart': {
-            this.previousW = this.innerW;
-            this.previousH = this.innerH;
-            pos = this.calcPosition(
-              this.innerX,
-              this.innerY,
-              this.innerW,
-              this.innerH,
-            );
+            t.previousW = t.innerW;
+            t.previousH = t.innerH;
+            pos = t.calcPosition(t.innerX, t.innerY, t.innerW, t.innerH);
             newSize.width = pos.width;
             newSize.height = pos.height;
-            this.resizing = newSize;
-            this.isResizing = true;
+            t.resizing = newSize;
+            t.isResizing = true;
             break;
           }
           case 'resizemove': {
-            //                        console.log("### resize => " + event.type + ", lastW=" + this.lastW + ", lastH=" + this.lastH);
-            const coreEvent = createCoreData(this.lastW, this.lastH, x, y);
-            if (this.renderRtl) {
-              newSize.width = this.resizing.width - coreEvent.deltaX;
+            //                        console.log("### resize => " + event.type + ", lastW=" + t.lastW + ", lastH=" + t.lastH);
+            const coreEvent = createCoreData(t.lastW, t.lastH, x, y);
+            if (t.renderRtl) {
+              newSize.width = t.resizing.width - coreEvent.deltaX;
             } else {
-              newSize.width = this.resizing.width + coreEvent.deltaX;
+              newSize.width = t.resizing.width + coreEvent.deltaX;
             }
-            newSize.height = this.resizing.height + coreEvent.deltaY;
+            newSize.height = t.resizing.height + coreEvent.deltaY;
 
             ///console.log("### resize => " + event.type + ", deltaX=" + coreEvent.deltaX + ", deltaY=" + coreEvent.deltaY);
-            this.resizing = newSize;
+            t.resizing = newSize;
             break;
           }
           case 'resizeend': {
-            //console.log("### resize end => x=" +this.innerX + " y=" + this.innerY + " w=" + this.innerW + " h=" + this.innerH);
-            pos = this.calcPosition(
-              this.innerX,
-              this.innerY,
-              this.innerW,
-              this.innerH,
-            );
+            //console.log("### resize end => x=" +t.innerX + " y=" + t.innerY + " w=" + t.innerW + " h=" + t.innerH);
+            pos = t.calcPosition(t.innerX, t.innerY, t.innerW, t.innerH);
             newSize.width = pos.width;
             newSize.height = pos.height;
             //                        console.log("### resize end => " + JSON.stringify(newSize));
-            this.resizing = null;
-            this.isResizing = false;
+            t.resizing = null;
+            t.isResizing = false;
             break;
           }
         }
 
         // Get new WH
-        pos = this.calcWH(newSize.height, newSize.width);
-        if (pos.w < this.minW) {
-          pos.w = this.minW;
+        pos = t.calcWH(newSize.height, newSize.width);
+        if (pos.w < t.minW) {
+          pos.w = t.minW;
         }
-        if (pos.w > this.maxW) {
-          pos.w = this.maxW;
+        if (pos.w > t.maxW) {
+          pos.w = t.maxW;
         }
-        if (pos.h < this.minH) {
-          pos.h = this.minH;
+        if (pos.h < t.minH) {
+          pos.h = t.minH;
         }
-        if (pos.h > this.maxH) {
-          pos.h = this.maxH;
+        if (pos.h > t.maxH) {
+          pos.h = t.maxH;
         }
 
         if (pos.h < 1) {
@@ -508,45 +483,32 @@
           pos.w = 1;
         }
 
-        this.lastW = x;
-        this.lastH = y;
+        t.lastW = x;
+        t.lastH = y;
 
-        if (this.innerW !== pos.w || this.innerH !== pos.h) {
-          this.$emit(
-            'resize',
-            this.i,
-            pos.h,
-            pos.w,
-            newSize.height,
-            newSize.width,
-          );
+        if (t.innerW !== pos.w || t.innerH !== pos.h) {
+          t.$emit('resize', t.i, pos.h, pos.w, newSize.height, newSize.width);
         }
         if (
           event.type === 'resizeend' &&
-          (this.previousW !== this.innerW || this.previousH !== this.innerH)
+          (t.previousW !== t.innerW || t.previousH !== t.innerH)
         ) {
-          this.$emit(
-            'resized',
-            this.i,
-            pos.h,
-            pos.w,
-            newSize.height,
-            newSize.width,
-          );
+          t.$emit('resized', t.i, pos.h, pos.w, newSize.height, newSize.width);
         }
-        this.eventBus.$emit(
+        t.eventBus.$emit(
           'resizeEvent',
           event.type,
-          this.i,
-          this.innerX,
-          this.innerY,
+          t.i,
+          t.innerX,
+          t.innerY,
           pos.h,
           pos.w,
         );
       },
       handleDrag(event) {
-        if (this.static) return;
-        if (this.isResizing) return;
+        const t = this;
+        if (t.static) return;
+        if (t.isResizing) return;
 
         const position = getControlPosition(event);
 
@@ -558,27 +520,27 @@
         let newPosition = { top: 0, left: 0 };
         switch (event.type) {
           case 'dragstart': {
-            this.previousX = this.innerX;
-            this.previousY = this.innerY;
+            t.previousX = t.innerX;
+            t.previousY = t.innerY;
 
             let parentRect = event.target.offsetParent.getBoundingClientRect();
             let clientRect = event.target.getBoundingClientRect();
-            if (this.renderRtl) {
+            if (t.renderRtl) {
               newPosition.left = (clientRect.right - parentRect.right) * -1;
             } else {
               newPosition.left = clientRect.left - parentRect.left;
             }
             newPosition.top = clientRect.top - parentRect.top;
-            this.dragging = newPosition;
-            this.isDragging = true;
+            t.dragging = newPosition;
+            t.isDragging = true;
             break;
           }
           case 'dragend': {
-            if (!this.isDragging) return;
+            if (!t.isDragging) return;
             let parentRect = event.target.offsetParent.getBoundingClientRect();
             let clientRect = event.target.getBoundingClientRect();
             //                        Add rtl support
-            if (this.renderRtl) {
+            if (t.renderRtl) {
               newPosition.left = (clientRect.right - parentRect.right) * -1;
             } else {
               newPosition.left = clientRect.left - parentRect.left;
@@ -586,100 +548,97 @@
             newPosition.top = clientRect.top - parentRect.top;
             //                        console.log("### drag end => " + JSON.stringify(newPosition));
             //                        console.log("### DROP: " + JSON.stringify(newPosition));
-            this.dragging = null;
-            this.isDragging = false;
+            t.dragging = null;
+            t.isDragging = false;
             // shouldUpdate = true;
             break;
           }
           case 'dragmove': {
-            const coreEvent = createCoreData(this.lastX, this.lastY, x, y);
+            const coreEvent = createCoreData(t.lastX, t.lastY, x, y);
             //                        Add rtl support
-            if (this.renderRtl) {
-              newPosition.left = this.dragging.left - coreEvent.deltaX;
+            if (t.renderRtl) {
+              newPosition.left = t.dragging.left - coreEvent.deltaX;
             } else {
-              newPosition.left = this.dragging.left + coreEvent.deltaX;
+              newPosition.left = t.dragging.left + coreEvent.deltaX;
             }
-            newPosition.top = this.dragging.top + coreEvent.deltaY;
+            newPosition.top = t.dragging.top + coreEvent.deltaY;
             //                        console.log("### drag => " + event.type + ", x=" + x + ", y=" + y);
             //                        console.log("### drag => " + event.type + ", deltaX=" + coreEvent.deltaX + ", deltaY=" + coreEvent.deltaY);
             //                        console.log("### drag end => " + JSON.stringify(newPosition));
-            this.dragging = newPosition;
+            t.dragging = newPosition;
             break;
           }
         }
 
         // Get new XY
         let pos;
-        if (this.renderRtl) {
-          pos = this.calcXY(newPosition.top, newPosition.left);
+        if (t.renderRtl) {
+          pos = t.calcXY(newPosition.top, newPosition.left);
         } else {
-          pos = this.calcXY(newPosition.top, newPosition.left);
+          pos = t.calcXY(newPosition.top, newPosition.left);
         }
 
-        this.lastX = x;
-        this.lastY = y;
+        t.lastX = x;
+        t.lastY = y;
 
-        if (this.innerX !== pos.x || this.innerY !== pos.y) {
-          this.$emit('move', this.i, pos.x, pos.y);
+        if (t.innerX !== pos.x || t.innerY !== pos.y) {
+          t.$emit('move', t.i, pos.x, pos.y);
         }
         if (
           event.type === 'dragend' &&
-          (this.previousX !== this.innerX || this.previousY !== this.innerY)
+          (t.previousX !== t.innerX || t.previousY !== t.innerY)
         ) {
-          this.$emit('moved', this.i, pos.x, pos.y);
+          t.$emit('moved', t.i, pos.x, pos.y);
         }
-        this.eventBus.$emit(
+        t.eventBus.$emit(
           'dragEvent',
           event.type,
-          this.i,
+          t.i,
           pos.x,
           pos.y,
-          this.innerH,
-          this.innerW,
+          t.innerH,
+          t.innerW,
         );
       },
       calcPosition(x, y, w, h) {
-        const colWidth = this.calcColWidth();
+        const t = this;
+        const colWidth = t.calcColWidth();
         // add rtl support
         let out;
-        if (this.renderRtl) {
+        if (t.renderRtl) {
           out = {
-            right: Math.round(colWidth * x + (x + 1) * this.margin[0]),
-            top: Math.round(this.rowHeight * y + (y + 1) * this.margin[1]),
+            right: Math.round(colWidth * x + (x + 1) * t.margin[0]),
+            top: Math.round(t.rowHeight * y + (y + 1) * t.margin[1]),
             // 0 * Infinity === NaN, which causes problems with resize constriants;
-            // Fix this if it occurs.
+            // Fix t if it occurs.
             // Note we do it here rather than later because Math.round(Infinity) causes deopt
             width:
               w === Infinity
                 ? w
-                : Math.round(
-                    colWidth * w + Math.max(0, w - 1) * this.margin[0],
-                  ),
+                : Math.round(colWidth * w + Math.max(0, w - 1) * t.margin[0]),
             height:
               h === Infinity
                 ? h
                 : Math.round(
-                    this.rowHeight * h + Math.max(0, h - 1) * this.margin[1],
+                    t.rowHeight * h + Math.max(0, h - 1) * t.margin[1],
                   ),
           };
         } else {
           out = {
-            left: Math.round(colWidth * x + (x + 1) * this.margin[0]),
-            top: Math.round(this.rowHeight * y + (y + 1) * this.margin[1]),
+            left: Math.round(colWidth * x + (x + 1) * t.margin[0]),
+            top: Math.round(t.rowHeight * y + (y + 1) * t.margin[1]),
             // 0 * Infinity === NaN, which causes problems with resize constriants;
             // Fix this if it occurs.
             // Note we do it here rather than later because Math.round(Infinity) causes deopt
             width:
               w === Infinity
                 ? w
-                : Math.round(
-                    colWidth * w + Math.max(0, w - 1) * this.margin[0],
-                  ),
+                : Math.round(colWidth * w + Math.max(0, w - 1) * t.margin[0]),
             height:
               h === Infinity
                 ? h
                 : Math.round(
-                    this.rowHeight * h + Math.max(0, h - 1) * this.margin[1],
+                    t.rowHeight * h + Math.max(0, h - 1) * t.margin[1],
                   ),
           };
         }
@@ -694,7 +653,8 @@
        */
       // TODO check if this function needs change in order to support rtl.
       calcXY(top, left) {
-        const colWidth = this.calcColWidth();
+        const t = this;
+        const colWidth = t.calcColWidth();
 
         // left = colWidth * x + margin * (x + 1)
         // l = cx + m(x+1)
@@ -703,23 +663,20 @@
         // l - m = x(c + m)
         // (l - m) / (c + m) = x
         // x = (left - margin) / (coldWidth + margin)
-        let x = Math.round(
-          (left - this.margin[0]) / (colWidth + this.margin[0]),
-        );
-        let y = Math.round(
-          (top - this.margin[1]) / (this.rowHeight + this.margin[1]),
-        );
+        let x = Math.round((left - t.margin[0]) / (colWidth + t.margin[0]));
+        let y = Math.round((top - t.margin[1]) / (t.rowHeight + t.margin[1]));
 
         // Capping
-        x = Math.max(Math.min(x, this.cols - this.innerW), 0);
-        y = Math.max(Math.min(y, this.maxRows - this.innerH), 0);
+        x = Math.max(Math.min(x, t.cols - t.innerW), 0);
+        y = Math.max(Math.min(y, t.maxRows - t.innerH), 0);
 
         return { x, y };
       },
       // Helper for generating column width
       calcColWidth() {
+        const t = this;
         const colWidth =
-          (this.containerWidth - this.margin[0] * (this.cols + 1)) / this.cols;
+          (t.containerWidth - t.margin[0] * (t.cols + 1)) / t.cols;
         // console.log("### COLS=" + this.cols + " COL WIDTH=" + colWidth + " MARGIN " + this.margin[0]);
         return colWidth;
       },
@@ -731,27 +688,27 @@
        * @return {Object} w, h as grid units.
        */
       calcWH(height, width) {
-        const colWidth = this.calcColWidth();
+        const t = this;
+        const colWidth = t.calcColWidth();
 
         // width = colWidth * w - (margin * (w - 1))
         // ...
         // w = (width + margin) / (colWidth + margin)
-        let w = Math.round(
-          (width + this.margin[0]) / (colWidth + this.margin[0]),
-        );
+        let w = Math.round((width + t.margin[0]) / (colWidth + t.margin[0]));
         let h = Math.round(
-          (height + this.margin[1]) / (this.rowHeight + this.margin[1]),
+          (height + t.margin[1]) / (t.rowHeight + t.margin[1]),
         );
 
         // Capping
-        w = Math.max(Math.min(w, this.cols - this.innerX), 0);
-        h = Math.max(Math.min(h, this.maxRows - this.innerY), 0);
+        w = Math.max(Math.min(w, t.cols - t.innerX), 0);
+        h = Math.max(Math.min(h, t.maxRows - t.innerY), 0);
         return { w, h };
       },
       updateWidth(width, colNum) {
-        this.containerWidth = width;
+        const t = this;
+        t.containerWidth = width;
         if (colNum !== undefined && colNum !== null) {
-          this.cols = colNum;
+          t.cols = colNum;
         }
       },
       compact() {
@@ -759,24 +716,24 @@
       },
       tryMakeDraggable() {
         const t = this;
-        if (this.interactObj === null || this.interactObj === undefined) {
-          this.interactObj = interact(this.$refs.gridItem);
+        if (t.interactObj === null || t.interactObj === undefined) {
+          t.interactObj = interact(t.$refs.gridItem);
         }
-        if (this.draggable && !this.static) {
+        if (t.draggable && !t.static) {
           const opts = {
-            ignoreFrom: this.dragIgnoreFrom,
-            allowFrom: this.dragAllowFrom,
+            ignoreFrom: t.dragIgnoreFrom,
+            allowFrom: t.dragAllowFrom,
           };
-          this.interactObj.draggable(opts);
-          /*this.interactObj.draggable({allowFrom: '.vue-draggable-handle'});*/
-          if (!this.dragEventSet) {
-            this.dragEventSet = true;
-            this.interactObj.on('dragstart dragmove dragend', function (event) {
+          t.interactObj.draggable(opts);
+          /*t.interactObj.draggable({allowFrom: '.vue-draggable-handle'});*/
+          if (!t.dragEventSet) {
+            t.dragEventSet = true;
+            t.interactObj.on('dragstart dragmove dragend', (event) => {
               t.handleDrag(event);
             });
           }
         } else {
-          this.interactObj.draggable({
+          t.interactObj.draggable({
             enabled: false,
           });
         }
@@ -795,7 +752,7 @@
 
           const opts = {
             preserveAspectRatio: true,
-            // allowFrom: "." + this.resizableHandleClass,
+            // allowFrom: "." + t.resizableHandleClass,
             edges: {
               left: false,
               right: '.' + t.resizableHandleClass,
@@ -823,29 +780,30 @@
             });
           }
         } else {
-          this.interactObj.resizable({
+          t.interactObj.resizable({
             enabled: false,
           });
         }
       },
       autoSize() {
+        const t = this;
         // ok here we want to calculate if a resize is needed
-        this.previousW = this.innerW;
-        this.previousH = this.innerH;
+        t.previousW = t.innerW;
+        t.previousH = t.innerH;
 
-        let newSize = this.$slots.default[0].elm.getBoundingClientRect();
-        let pos = this.calcWH(newSize.height, newSize.width);
-        if (pos.w < this.minW) {
-          pos.w = this.minW;
+        let newSize = t.$slots.default[0].elm.getBoundingClientRect();
+        let pos = t.calcWH(newSize.height, newSize.width);
+        if (pos.w < t.minW) {
+          pos.w = t.minW;
         }
-        if (pos.w > this.maxW) {
-          pos.w = this.maxW;
+        if (pos.w > t.maxW) {
+          pos.w = t.maxW;
         }
-        if (pos.h < this.minH) {
-          pos.h = this.minH;
+        if (pos.h < t.minH) {
+          pos.h = t.minH;
         }
-        if (pos.h > this.maxH) {
-          pos.h = this.maxH;
+        if (pos.h > t.maxH) {
+          pos.h = t.maxH;
         }
 
         if (pos.h < 1) {
@@ -855,34 +813,20 @@
           pos.w = 1;
         }
 
-        // this.lastW = x; // basically, this is copied from resizehandler, but shouldn't be needed
-        // this.lastH = y;
+        // t.lastW = x; // basically, t is copied from resizehandler, but shouldn't be needed
+        // t.lastH = y;
 
-        if (this.innerW !== pos.w || this.innerH !== pos.h) {
-          this.$emit(
-            'resize',
-            this.i,
-            pos.h,
-            pos.w,
-            newSize.height,
-            newSize.width,
-          );
+        if (t.innerW !== pos.w || t.innerH !== pos.h) {
+          t.$emit('resize', t.i, pos.h, pos.w, newSize.height, newSize.width);
         }
-        if (this.previousW !== pos.w || this.previousH !== pos.h) {
-          this.$emit(
-            'resized',
-            this.i,
-            pos.h,
-            pos.w,
-            newSize.height,
-            newSize.width,
-          );
-          this.eventBus.$emit(
+        if (t.previousW !== pos.w || t.previousH !== pos.h) {
+          t.$emit('resized', t.i, pos.h, pos.w, newSize.height, newSize.width);
+          t.eventBus.$emit(
             'resizeEvent',
             'resizeend',
-            this.i,
-            this.innerX,
-            this.innerY,
+            t.i,
+            t.innerX,
+            t.innerY,
             pos.h,
             pos.w,
           );
