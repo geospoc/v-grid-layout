@@ -142,7 +142,7 @@
     watch: {
       width(newval, oldval) {
         const t = this;
-        t.$nextTick(function () {
+        t.$nextTick(() => {
           //t.$broadcast("updateWidth", t.width);
           t.eventBus.$emit('updateWidth', t.width);
           if (oldval === null) {
@@ -205,10 +205,10 @@
     created() {
       const t = this;
       // Accessible refernces of functions for removing in beforeDestroy
-      t.resizeEventHandler = function (eventType, i, x, y, h, w) {
+      t.resizeEventHandler = (eventType, i, x, y, h, w) => {
         t.resizeEvent(eventType, i, x, y, h, w);
       };
-      t.dragEventHandler = function (eventType, i, x, y, h, w) {
+      t.dragEventHandler = (eventType, i, x, y, h, w) => {
         t.dragEvent(eventType, i, x, y, h, w);
       };
       t._provided.eventBus = new Vue();
@@ -222,11 +222,11 @@
     },
     mounted() {
       this.$emit('layout-mounted', this.layout);
-      this.$nextTick(function () {
+      this.$nextTick(() => {
         validateLayout(this.layout);
         this.originalLayout = this.layout;
         const t = this;
-        this.$nextTick(function () {
+        this.$nextTick(() => {
           t.onWindowResize();
           t.initResponsiveFeatures();
           //t.width = t.$el.offsetWidth;
@@ -234,13 +234,13 @@
           compact(t.layout, t.verticalCompact);
           t.$emit('layout-updated', t.layout);
           t.updateHeight();
-          t.$nextTick(function () {
+          t.$nextTick(() => {
             this.erd = elementResizeDetectorMaker({
               strategy: 'scroll', //<- For ultra performance.
               // See https://github.com/wnr/element-resize-detector/issues/110 about callOnAdd.
               callOnAdd: false,
             });
-            this.erd.listenTo(t.$refs.gridLayout, function () {
+            t.erd.listenTo(t.$refs.gridLayout, () => {
               t.onWindowResize();
             });
           });
@@ -324,13 +324,13 @@
           this.placeholder.y = l.y;
           this.placeholder.w = w;
           this.placeholder.h = h;
-          this.$nextTick(function () {
+          this.$nextTick(() => {
             this.isDragging = true;
           });
           //this.$broadcast("updateWidth", this.width);
           this.eventBus.$emit('updateWidth', this.width);
         } else {
-          this.$nextTick(function () {
+          this.$nextTick(() => {
             this.isDragging = false;
           });
         }
@@ -393,13 +393,13 @@
           this.placeholder.y = y;
           this.placeholder.w = l.w;
           this.placeholder.h = l.h;
-          this.$nextTick(function () {
+          this.$nextTick(() => {
             this.isDragging = true;
           });
           //this.$broadcast("updateWidth", this.width);
           this.eventBus.$emit('updateWidth', this.width);
         } else {
-          this.$nextTick(function () {
+          this.$nextTick(() => {
             this.isDragging = false;
           });
         }
@@ -460,15 +460,15 @@
       // find difference in layouts
       findDifference(layout, originalLayout) {
         //Find values that are in result1 but not in result2
-        let uniqueResultOne = layout.filter(function (obj) {
-          return !originalLayout.some(function (obj2) {
+        let uniqueResultOne = layout.filter((obj) => {
+          return !originalLayout.some((obj2) => {
             return obj.i === obj2.i;
           });
         });
 
         //Find values that are in result2 but not in result1
-        let uniqueResultTwo = originalLayout.filter(function (obj) {
-          return !layout.some(function (obj2) {
+        let uniqueResultTwo = originalLayout.filter((obj) => {
+          return !layout.some((obj2) => {
             return obj.i === obj2.i;
           });
         });
