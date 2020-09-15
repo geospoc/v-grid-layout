@@ -1,50 +1,12 @@
-<h1 align="center">vue-grid-layout</h1>
+# v-grid-layout ⺲ 
 
-<p align="center">
-<a href="https://www.npmjs.com/package/vue-grid-layout"><img src="https://img.shields.io/npm/v/vue-grid-layout.svg"/> <img src="https://img.shields.io/npm/dm/vue-grid-layout.svg"/></a> <a href="https://vuejs.org/"><img src="https://img.shields.io/badge/vue-2.2.x-brightgreen.svg"/></a>
-</p>
+[![GitHub Workflow Status](https://github.com/geospoc/v-grid-layout/workflows/ci/badge.svg)](https://github.com/geospoc/v-grid-layout/actions?query=workflow%3Aci)
 
-vue-grid-layout is a grid layout system, like [Gridster](http://dsmorse.github.io/gridster.js/), for Vue.js. **Heavily inspired by [React-Grid-Layout](https://github.com/STRML/react-grid-layout)**
 
-### **Current version:** 2.3.8 (Supports Vue 2.2+)
-
-### **For Vue 2.1.10 and below use version [2.1.3](https://github.com/jbaysolutions/vue-grid-layout/tree/2.1.3)**
-### **For Vue 1 use version [1.0.3](https://github.com/jbaysolutions/vue-grid-layout/tree/1.0.3)** 
-
-<br/>
+- `v-grid-layout` is a grid layout system, like [Gridster](http://dsmorse.github.io/gridster.js/), for Vue. 
+- This is a bare-clone fork of [`vue-grid-layout`](https://github.com/jbaysolutions/vue-grid-layout) which supports nesting the `GridItem` inside any other component(s)
 
 [**[Demo](https://jbaysolutions.github.io/vue-grid-layout/examples/01-basic.html) | [Changelog](/CHANGELOG.md)**]
-
-English | [简体中文](./README-zh_CN.md) 
-
-<!--
-## Table of Contents
-
-- [Features](#features)
-- [Getting Started](#getting-started)
-  - [Installation](#installation)
-    - [npm](#npm)
-- [Contribute](#contribute)
-- [TODO List](#todo-list)
-
-## Demos
-
-
-TODO UPDATE DOCS
-
-Used guide for vue cli build: https://medium.com/justfrontendthings/how-to-create-and-publish-your-own-vuejs-component-library-on-npm-using-vue-cli-28e60943eed3
-Also check https://cli.vuejs.org/guide/build-targets.html#library
-
--->
-
-#### Projects using vue-grid-layout
-
-- [Draxed](https://www.draxed.com/?utm_source=github&utm_medium=web&utm_campaign=vue-grid-layout)
-- [cryptotiles](https://www.cryptotiles.io/?utm_source=github&utm_medium=web&utm_campaign=vue-grid-layout)
-- [Data Providers](https://www.dataproviders.io/?utm_source=github&utm_medium=web&utm_campaign=vue-grid-layout)
-- [Cataholic](https://cataholic.glitch.me/)
-
-*Know of others? Create a PR to let me know!*
 
 ## Features
 
@@ -64,99 +26,95 @@ Also check https://cli.vuejs.org/guide/build-targets.html#library
 
 #### npm
 
-    # install with npm    
-	npm install vue-grid-layout --save
-    
-    # install with yarn    
-    yarn add vue-grid-layout
-
+```bash
+# install with npm
+$ npm install @geospoc/v-grid-layout
+```
 
 Import the library
 
 ```javascript
-    import VueGridLayout from 'vue-grid-layout';
+  import VueGridLayout from '@geospoc/v-grid-layout';
 ```
 
 Add to other Vue components 
 
  ```javascript
-    export default {
-        components: {
-            GridLayout: VueGridLayout.GridLayout,
-            GridItem: VueGridLayout.GridItem
-        },
-    // ... data, methods, mounted (), etc.
-    }
-    
+export default {
+  components: {
+    GridLayout: VueGridLayout.GridLayout,
+    GridItem: VueGridLayout.GridItem
+  },
+// ... data, methods, mounted (), etc.
+}
 ```    
 
-#### browser
+#### Browser
 
-Include the browser-ready bundle (download from [releases](https://github.com/jbaysolutions/vue-grid-layout/releases)) in your page. The components will be automatically available.
+Include the browser-ready bundle (download from [releases](https://github.com/geospoc/v-grid-layout/releases)) in your page. The components will be automatically available.
 
 ```html
-    <script src="vue-grid-layout.umd.min.js"></script>
+  <script src="v-grid-layout.umd.min.js"></script>
 ```
 
 ### Usage
 
 ```javascript
-	var testLayout = [
-	    {"x":0,"y":0,"w":2,"h":2,"i":"0"},
-	    {"x":2,"y":0,"w":2,"h":4,"i":"1"},
-	    {"x":4,"y":0,"w":2,"h":5,"i":"2"},
-	    {"x":6,"y":0,"w":2,"h":3,"i":"3"},
-	    {"x":8,"y":0,"w":2,"h":3,"i":"4"},
-	    {"x":10,"y":0,"w":2,"h":3,"i":"5"},
-	    {"x":0,"y":5,"w":2,"h":5,"i":"6"},
-	    {"x":2,"y":5,"w":2,"h":5,"i":"7"},
-	    {"x":4,"y":5,"w":2,"h":5,"i":"8"},
-	    {"x":6,"y":3,"w":2,"h":4,"i":"9"},
-	    {"x":8,"y":4,"w":2,"h":4,"i":"10"},
-	    {"x":10,"y":4,"w":2,"h":4,"i":"11"},
-	    {"x":0,"y":10,"w":2,"h":5,"i":"12"},
-	    {"x":2,"y":10,"w":2,"h":5,"i":"13"},
-	    {"x":4,"y":8,"w":2,"h":4,"i":"14"},
-	    {"x":6,"y":8,"w":2,"h":4,"i":"15"},
-	    {"x":8,"y":10,"w":2,"h":5,"i":"16"},
-	    {"x":10,"y":4,"w":2,"h":2,"i":"17"},
-	    {"x":0,"y":9,"w":2,"h":3,"i":"18"},
-	    {"x":2,"y":6,"w":2,"h":2,"i":"19"}
-	];
-	
-	new Vue({
-	    el: '#app',
-	    data: {
-	        layout: testLayout,
-	    },
-	});
+var testLayout = [
+  { x: 0, y: 0, w: 2, h: 2, i: '0' },
+  { x: 2, y: 0, w: 2, h: 4, i: '1' },
+  { x: 4, y: 0, w: 2, h: 5, i: '2' },
+  { x: 6, y: 0, w: 2, h: 3, i: '3' },
+  { x: 8, y: 0, w: 2, h: 3, i: '4' },
+  { x: 10, y: 0, w: 2, h: 3, i: '5' },
+  { x: 0, y: 5, w: 2, h: 5, i: '6' },
+  { x: 2, y: 5, w: 2, h: 5, i: '7' },
+  { x: 4, y: 5, w: 2, h: 5, i: '8' },
+  { x: 6, y: 3, w: 2, h: 4, i: '9' },
+  { x: 8, y: 4, w: 2, h: 4, i: '10' },
+  { x: 10, y: 4, w: 2, h: 4, i: '11' },
+  { x: 0, y: 10, w: 2, h: 5, i: '12' },
+  { x: 2, y: 10, w: 2, h: 5, i: '13' },
+  { x: 4, y: 8, w: 2, h: 4, i: '14' },
+  { x: 6, y: 8, w: 2, h: 4, i: '15' },
+  { x: 8, y: 10, w: 2, h: 5, i: '16' },
+  { x: 10, y: 4, w: 2, h: 2, i: '17' },
+  { x: 0, y: 9, w: 2, h: 3, i: '18' },
+  { x: 2, y: 6, w: 2, h: 2, i: '19' },
+];
+
+new Vue({
+  el: '#app',
+  data: {
+    layout: testLayout,
+  },
+});
 ``` 
 
-
 ```html
-
-    <grid-layout
-            :layout.sync="layout"
-            :col-num="12"
-            :row-height="30"
-            :is-draggable="true"
-            :is-resizable="true"
-            :is-mirrored="false"
-            :vertical-compact="true"
-            :margin="[10, 10]"
-            :use-css-transforms="true"
-    >
-
-        <grid-item v-for="item in layout"
-                   :x="item.x"
-                   :y="item.y"
-                   :w="item.w"
-                   :h="item.h"
-                   :i="item.i"
-                   :key="item.i">
-            {{item.i}}
-        </grid-item>
-    </grid-layout>
+<grid-layout
+  :layout.sync="layout"
+  :col-num="12"
+  :row-height="30"
+  :is-draggable="true"
+  :is-resizable="true"
+  :is-mirrored="false"
+  :vertical-compact="true"
+  :margin="[10, 10]"
+  :use-css-transforms="true"
+>
+  <grid-item
+    v-for="item in layout"
+    :key="item.i"
+    :x="item.x"
+    :y="item.y"
+    :w="item.w"
+    :h="item.h"
+    :i="item.i"
+  >
+    {{ item.i }}
+  </grid-item>
+</grid-layout>
 ```
 
 
@@ -464,39 +422,39 @@ Moved and resized event listeners can be added, if the only notification needed 
 Working example [here](https://jbaysolutions.github.io/vue-grid-layout/examples/02-events.html)   
 
 ````html
-
-    <grid-layout
-            :layout="layout"
-            :col-num="12"
-            :row-height="30"
-            :is-draggable="true"
-            :is-resizable="true"
-            :vertical-compact="true"
-            :margin="[10, 10]"
-            :use-css-transforms="true"
-            @layout-created="layoutCreatedEvent"
-            @layout-before-mount="layoutBeforeMountEvent"
-            @layout-mounted="layoutMountedEvent"
-            @layout-ready="layoutReadyEvent"
-            @layout-updated="layoutUpdatedEvent"
-            @breakpoint-changed="breakpointChangedEvent"
-    >
-
-        <grid-item v-for="item in layout"
-                   :x="item.x"
-                   :y="item.y"
-                   :w="item.w"
-                   :h="item.h"
-                   :i="item.i"
-                   :key="item.i"
-                   @resize="resizeEvent"
-                   @move="moveEvent"
-                   @resized="resizedEvent"
-                   @container-resized="containerResizedEvent"
-                   @moved="movedEvent">
-            {{item.i}}
-        </grid-item>
-    </grid-layout>
+<grid-layout
+  :layout="layout"
+  :col-num="12"
+  :row-height="30"
+  :is-draggable="true"
+  :is-resizable="true"
+  :vertical-compact="true"
+  :margin="[10, 10]"
+  :use-css-transforms="true"
+  @layout-created="layoutCreatedEvent"
+  @layout-before-mount="layoutBeforeMountEvent"
+  @layout-mounted="layoutMountedEvent"
+  @layout-ready="layoutReadyEvent"
+  @layout-updated="layoutUpdatedEvent"
+  @breakpoint-changed="breakpointChangedEvent"
+>
+  <grid-item
+    v-for="item in layout"
+    :key="item.i"
+    :x="item.x"
+    :y="item.y"
+    :w="item.w"
+    :h="item.h"
+    :i="item.i"
+    @resize="resizeEvent"
+    @move="moveEvent"
+    @resized="resizedEvent"
+    @container-resized="containerResizedEvent"
+    @moved="movedEvent"
+  >
+    {{ item.i }}
+  </grid-item>
+</grid-layout>
 ```` 
 
 * **layoutCreatedEvent**
@@ -506,7 +464,7 @@ Working example [here](https://jbaysolutions.github.io/vue-grid-layout/examples/
     Emited on the component created lifecycle hook
 
 ```javascript
-    layoutCreatedEvent: function(newLayout){
+    layoutCreatedEvent(newLayout) {
       console.log("Created layout: ", newLayout)
     }
 ```
@@ -518,7 +476,7 @@ Working example [here](https://jbaysolutions.github.io/vue-grid-layout/examples/
     Emited on the component beforeMount lifecycle hook
 
 ```javascript
-    layoutBeforeMountEvent: function(newLayout){
+    layoutBeforeMountEvent(newLayout) {
       console.log("beforeMount layout: ", newLayout)
     }
 ```
@@ -530,7 +488,7 @@ Working example [here](https://jbaysolutions.github.io/vue-grid-layout/examples/
     Emited on the component mounted lifecycle hook
 
 ```javascript
-    layoutMountedEvent: function(newLayout){
+    layoutMountedEvent(newLayout) {
       console.log("Mounted layout: ", newLayout)
     }
 ```
@@ -542,7 +500,7 @@ Working example [here](https://jbaysolutions.github.io/vue-grid-layout/examples/
     Emited when all the operations on the mount hook finish
 
 ```javascript
-    layoutReadyEvent: function(newLayout){
+    layoutReadyEvent(newLayout) {
       console.log("Ready layout: ", newLayout)
     }
 ```
@@ -554,7 +512,7 @@ Working example [here](https://jbaysolutions.github.io/vue-grid-layout/examples/
     Every time the layout has finished updating and positions of all grid-items are recalculated
 
 ```javascript
-    layoutUpdatedEvent: function(newLayout){
+    layoutUpdatedEvent(newLayout) {
       console.log("Updated layout: ", newLayout)
     }
 ```
@@ -566,7 +524,7 @@ Working example [here](https://jbaysolutions.github.io/vue-grid-layout/examples/
     Every time an item is being moved and changes position
 
 ```javascript
-    moveEvent: function(i, newX, newY){
+    moveEvent(i, newX, newY) {
         console.log("MOVE i=" + i + ", X=" + newX + ", Y=" + newY);
     },
 ```
@@ -578,7 +536,7 @@ Working example [here](https://jbaysolutions.github.io/vue-grid-layout/examples/
     Every time an item is being resized and changes size
  
 ```javascript
-    resizeEvent: function(i, newH, newW, newHPx, newWPx){
+    resizeEvent(i, newH, newW, newHPx, newWPx) {
         console.log("RESIZE i=" + i + ", H=" + newH + ", W=" + newW + ", H(px)=" + newHPx + ", W(px)=" + newWPx);
     },
 ``` 
@@ -590,7 +548,7 @@ Working example [here](https://jbaysolutions.github.io/vue-grid-layout/examples/
     Every time an item is finished being moved and changes position
 
 ```javascript
-    movedEvent: function(i, newX, newY){
+    movedEvent(i, newX, newY) {
         console.log("MOVED i=" + i + ", X=" + newX + ", Y=" + newY);
     },
 ```
@@ -611,7 +569,7 @@ Working example [here](https://jbaysolutions.github.io/vue-grid-layout/examples/
      * @param newWPx new width in pixels
      * 
      */
-    resizedEvent: function(i, newH, newW, newHPx, newWPx){
+    resizedEvent(i, newH, newW, newHPx, newWPx) {
         console.log("RESIZED i=" + i + ", H=" + newH + ", W=" + newW + ", H(px)=" + newHPx + ", W(px)=" + newWPx);
     },
 ``` 
@@ -632,7 +590,7 @@ Working example [here](https://jbaysolutions.github.io/vue-grid-layout/examples/
      * @param newWPx new width in pixels
      * 
      */
-    containerResizedEvent: function(i, newH, newW, newHPx, newWPx){
+    containerResizedEvent(i, newH, newW, newHPx, newWPx) {
         console.log("CONTAINER RESIZED i=" + i + ", H=" + newH + ", W=" + newW + ", H(px)=" + newHPx + ", W(px)=" + newWPx);
     },
 ``` 
@@ -650,22 +608,13 @@ Working example [here](https://jbaysolutions.github.io/vue-grid-layout/examples/
      * @param newLayout the chosen layout for the breakpoint
      * 
      */
-    breakpointChangedEvent: function(newBreakpoint, newLayout){
+    breakpointChangedEvent(newBreakpoint, newLayout) {
         console.log("BREAKPOINT CHANGED breakpoint=", newBreakpoint, ", layout: ", newLayout );
     },
 ``` 
 
+## Contributing
 
-## Contribute
+_Note_: Commits & PRs will be allowed only if the commit messages & PR titles follow a particular standard format, read more about it [here](https://github.com/conventional-changelog/commitlint/tree/master/%40commitlint/config-conventional#type-enum)
 
-If you have a feature request, please add it as an issue or make a pull request.
-
-
-## TODO List
-
-- [x] Basic grid layout
-- [x] Responsive
-- [x] Draggable grid items
-- [x] Resizable grid items
-- [x] Static elements
-- [x] Min/max w/h per item
+Please contribute using [Github Flow](https://guides.github.com/introduction/flow/). Create a new branch from the default branch, add commits, and [open a pull request](https://github.com/geospoc/v-grid-layout/compare)
