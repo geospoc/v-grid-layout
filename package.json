@@ -1,7 +1,83 @@
 {
-  "name": "vue-grid-layout",
-  "version": "2.3.8",
-  "description": "A draggable and resizable grid layout, as a Vue component.",
+  "name": "@geospoc/v-grid-layout",
+  "version": "0.0.0",
+  "description": "A draggable and resizable grid layout, as a Vue component",
+  "files": ["dist"],
+  "private": false,
+  "sideEffects": false,
+  "main": "dist/v-grid-layout.cjs.min.js",
+  "unpkg": "dist/v-grid-layout.umd.min.js",
+  "scripts": {
+    "test": "ava",
+    "test:snapshot": "ava --update-snapshots",
+    "build": "npm run bundle && npm run bundle:min",
+    "bundle": "rollup -c build/rollup.config.js",
+    "bundle:min": "rollup -c build/rollup.min.config.js",
+    "lint": "npm run lint:eslint && npm run lint:prettier",
+    "lintfix": "npm run lint:eslint:fix && npm run lint:prettier:fix",
+    "lint:eslint": "eslint \"{,!(node_modules|dist|examples)/**/}*.{js,vue}\"",
+    "lint:eslint:fix": "eslint --fix \"{,!(node_modules|dist|examples)/**/}*.{js,vue}\"",
+    "lint:prettier": "prettier --check \"{,!(node_modules|dist|examples)/**/}*.{js,vue}\"",
+    "lint:prettier:fix": "prettier --write \"{,!(node_modules|dist|examples)/**/}*.{js,vue}\"",
+    "release": "shipjs prepare"
+  },
+  "dependencies": {
+    "element-resize-detector": "^1.2.1",
+    "interactjs": "^1.9.22"
+  },
+  "devDependencies": {
+    "@ava/babel": "^1.0.1",
+    "@babel/core": "^7.11.6",
+    "@babel/preset-env": "^7.11.5",
+    "@commitlint/cli": "^11.0.0",
+    "@commitlint/config-conventional": "^11.0.0",
+    "@geospoc/prettier-config-standard": "^1.0.1",
+    "@rollup/plugin-babel": "^5.2.1",
+    "@rollup/plugin-commonjs": "^15.0.0",
+    "@vue/test-utils": "^1.1.0",
+    "ava": "^3.12.1",
+    "babel-eslint": "^10.1.0",
+    "babel-plugin-module-resolver": "^4.0.0",
+    "eslint": "^7.9.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-config-vue": "^2.0.2",
+    "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-vue": "^6.2.2",
+    "husky": "^4.3.0",
+    "jsdom": "^16.4.0",
+    "jsdom-global": "^3.0.2",
+    "prettier": "^2.1.1",
+    "require-extension-hooks": "^0.3.3",
+    "require-extension-hooks-babel": "^1.0.0",
+    "require-extension-hooks-vue": "^3.0.0",
+    "rollup": "^2.26.11",
+    "rollup-plugin-terser": "^7.0.2",
+    "rollup-plugin-vue": "^5.1.6",
+    "shipjs": "^0.21.0",
+    "vue": "^2.6.12",
+    "vue-template-compiler": "^2.6.12"
+  },
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://npm.pkg.github.com"
+  },
+  "repository": {
+    "url": "git+https://github.com/geospoc/v-grid-layout",
+    "type": "git"
+  },
+  "author": {
+    "name": "GeoSpoc Developers",
+    "email": "developers@geospoc.com",
+    "url": "https://geospoc.io"
+  },
+  "contributors": [
+    {
+      "name": "Vinayak Kulkarni",
+      "email": "inbox.vinayak@gmail.com",
+      "url": "https://vinayakkulkarni.dev"
+    }
+  ],
   "keywords": [
     "grid",
     "vuejs",
@@ -12,34 +88,8 @@
     "fluid",
     "responsive"
   ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/jbaysolutions/vue-grid-layout.git"
+  "bugs": {
+    "url": "https://github.com/geospoc/v-grid-layout/issues"
   },
-  "author": "Gustavo Santos (JBay Solutions) <gustavo.santos@jbaysolutions.com> (http://www.jbaysolutions.com)",
-  "main": "dist/vue-grid-layout.common.js",
-  "unpkg": "dist/vue-grid-layout.umd.min.js",
-  "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "rimraf dist && vue-cli-service build",
-    "build-lib": "rimraf dist && vue-cli-service build --target lib ./src/components/index.js",
-    "lint": "vue-cli-service lint"
-  },
-  "dependencies": {
-    "element-resize-detector": "^1.1.15",
-    "interactjs": "^1.6.3"
-  },
-  "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.4.1",
-    "@vue/cli-plugin-eslint": "^3.4.1",
-    "@vue/cli-service": "^3.4.1",
-    "@vue/eslint-config-standard": "^3.0.5",
-    "babel-plugin-transform-flow-comments": "^6.7.0",
-    "node-sass": "^4.13.0",
-    "rimraf": "^2.6.2",
-    "sass-loader": "^7.0.1",
-    "vue": "^2.6.10",
-    "vue-template-compiler": "^2.6.10",
-    "webpack-bundle-analyzer": "^3.4.1"
-  }
+  "homepage": "https://github.com/geospoc/v-grid-layout#readme"
 }

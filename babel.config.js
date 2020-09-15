@@ -1,8 +1,20 @@
 module.exports = {
-    presets: [
-        '@vue/app'
-    ],
-    "plugins": [
-        "transform-flow-comments"
-    ]
-}
+  presets: ['@babel/preset-env'],
+  env: {
+    test: {
+      plugins: [
+        [
+          'module-resolver',
+          {
+            root: ['./'],
+            alias: {
+              '@': './',
+              '~': './',
+            },
+          },
+        ],
+      ],
+      ignore: ['ava.config.cjs'],
+    },
+  },
+};
