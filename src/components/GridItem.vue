@@ -127,7 +127,7 @@
       },
     },
     inject: ['eventBus'],
-    data: function () {
+    data() {
       return {
         cols: 1,
         containerWidth: 100,
@@ -196,72 +196,72 @@
       },
     },
     watch: {
-      isDraggable: function () {
+      isDraggable() {
         this.draggable = this.isDraggable;
       },
-      static: function () {
+      static() {
         this.tryMakeDraggable();
         this.tryMakeResizable();
       },
-      draggable: function () {
+      draggable() {
         this.tryMakeDraggable();
       },
-      isResizable: function () {
+      isResizable() {
         this.resizable = this.isResizable;
       },
-      resizable: function () {
+      resizable() {
         this.tryMakeResizable();
       },
-      rowHeight: function () {
+      rowHeight() {
         this.createStyle();
         this.emitContainerResized();
       },
-      cols: function () {
-        this.tryMakeResizable();
-        this.createStyle();
-        this.emitContainerResized();
-      },
-      containerWidth: function () {
+      cols() {
         this.tryMakeResizable();
         this.createStyle();
         this.emitContainerResized();
       },
-      x: function (newVal) {
+      containerWidth() {
+        this.tryMakeResizable();
+        this.createStyle();
+        this.emitContainerResized();
+      },
+      x(newVal) {
         this.innerX = newVal;
         this.createStyle();
       },
-      y: function (newVal) {
+      y(newVal) {
         this.innerY = newVal;
         this.createStyle();
       },
-      h: function (newVal) {
+      h(newVal) {
         this.innerH = newVal;
         this.createStyle();
         // this.emitContainerResized();
       },
-      w: function (newVal) {
+      w(newVal) {
         this.innerW = newVal;
         this.createStyle();
         // this.emitContainerResized();
       },
-      renderRtl: function () {
+      renderRtl() {
         // console.log("### renderRtl");
         this.tryMakeResizable();
         this.createStyle();
       },
-      minH: function () {
+      minH() {
         this.tryMakeResizable();
       },
-      maxH: function () {
+      maxH() {
         this.tryMakeResizable();
       },
-      minW: function () {
+      minW() {
         this.tryMakeResizable();
       },
-      maxW: function () {
+      maxW() {
         this.tryMakeResizable();
       },
-      '$parent.margin': function (margin) {
+      '$parent.margin'(margin) {
         if (
           !margin ||
           (margin[0] == this.margin[0] && margin[1] == this.margin[1])
@@ -274,73 +274,73 @@
       },
     },
     created() {
-      let self = this;
+      let t = this;
 
       // Accessible refernces of functions for removing in beforeDestroy
-      self.updateWidthHandler = function (width) {
-        self.updateWidth(width);
+      t.updateWidthHandler = function (width) {
+        t.updateWidth(width);
       };
 
-      self.compactHandler = function (layout) {
-        self.compact(layout);
+      t.compactHandler = function (layout) {
+        t.compact(layout);
       };
 
-      self.setDraggableHandler = function (isDraggable) {
-        if (self.isDraggable === null) {
-          self.draggable = isDraggable;
+      t.setDraggableHandler = function (isDraggable) {
+        if (t.isDraggable === null) {
+          t.draggable = isDraggable;
         }
       };
 
-      self.setResizableHandler = function (isResizable) {
-        if (self.isResizable === null) {
-          self.resizable = isResizable;
+      t.setResizableHandler = function (isResizable) {
+        if (t.isResizable === null) {
+          t.resizable = isResizable;
         }
       };
 
-      self.setRowHeightHandler = function (rowHeight) {
-        self.rowHeight = rowHeight;
+      t.setRowHeightHandler = function (rowHeight) {
+        t.rowHeight = rowHeight;
       };
 
-      self.setMaxRowsHandler = function (maxRows) {
-        self.maxRows = maxRows;
+      t.setMaxRowsHandler = function (maxRows) {
+        t.maxRows = maxRows;
       };
 
-      self.directionchangeHandler = () => {
+      t.directionchangeHandler = () => {
         this.rtl = getDocumentDir() === 'rtl';
         this.compact();
       };
 
-      self.setColNum = (colNum) => {
-        self.cols = parseInt(colNum);
+      t.setColNum = (colNum) => {
+        t.cols = parseInt(colNum);
       };
 
-      this.eventBus.$on('updateWidth', self.updateWidthHandler);
-      this.eventBus.$on('compact', self.compactHandler);
-      this.eventBus.$on('setDraggable', self.setDraggableHandler);
-      this.eventBus.$on('setResizable', self.setResizableHandler);
-      this.eventBus.$on('setRowHeight', self.setRowHeightHandler);
-      this.eventBus.$on('setMaxRows', self.setMaxRowsHandler);
-      this.eventBus.$on('directionchange', self.directionchangeHandler);
-      this.eventBus.$on('setColNum', self.setColNum);
+      this.eventBus.$on('updateWidth', t.updateWidthHandler);
+      this.eventBus.$on('compact', t.compactHandler);
+      this.eventBus.$on('setDraggable', t.setDraggableHandler);
+      this.eventBus.$on('setResizable', t.setResizableHandler);
+      this.eventBus.$on('setRowHeight', t.setRowHeightHandler);
+      this.eventBus.$on('setMaxRows', t.setMaxRowsHandler);
+      this.eventBus.$on('directionchange', t.directionchangeHandler);
+      this.eventBus.$on('setColNum', t.setColNum);
 
       this.rtl = getDocumentDir() === 'rtl';
     },
-    beforeDestroy: function () {
-      let self = this;
+    beforeDestroy() {
+      let t = this;
       //Remove listeners
-      this.eventBus.$off('updateWidth', self.updateWidthHandler);
-      this.eventBus.$off('compact', self.compactHandler);
-      this.eventBus.$off('setDraggable', self.setDraggableHandler);
-      this.eventBus.$off('setResizable', self.setResizableHandler);
-      this.eventBus.$off('setRowHeight', self.setRowHeightHandler);
-      this.eventBus.$off('setMaxRows', self.setMaxRowsHandler);
-      this.eventBus.$off('directionchange', self.directionchangeHandler);
-      this.eventBus.$off('setColNum', self.setColNum);
+      this.eventBus.$off('updateWidth', t.updateWidthHandler);
+      this.eventBus.$off('compact', t.compactHandler);
+      this.eventBus.$off('setDraggable', t.setDraggableHandler);
+      this.eventBus.$off('setResizable', t.setResizableHandler);
+      this.eventBus.$off('setRowHeight', t.setRowHeightHandler);
+      this.eventBus.$off('setMaxRows', t.setMaxRowsHandler);
+      this.eventBus.$off('directionchange', t.directionchangeHandler);
+      this.eventBus.$off('setColNum', t.setColNum);
       if (this.interactObj) {
         this.interactObj.unset(); // destroy interact intance
       }
     },
-    mounted: function () {
+    mounted() {
       this.cols = this.$parent.colNum;
       this.rowHeight = this.$parent.rowHeight;
       this.containerWidth =
@@ -362,7 +362,7 @@
       this.createStyle();
     },
     methods: {
-      createStyle: function () {
+      createStyle() {
         if (this.x + this.w > this.cols) {
           this.innerX = 0;
           this.innerW = this.w > this.cols ? this.cols : this.w;
@@ -430,7 +430,7 @@
           styleProps.width,
         );
       },
-      handleResize: function (event) {
+      handleResize(event) {
         if (this.static) return;
         const position = getControlPosition(event);
         // Get the current drag point from the event. This is used as the offset.
@@ -638,7 +638,7 @@
           this.innerW,
         );
       },
-      calcPosition: function (x, y, w, h) {
+      calcPosition(x, y, w, h) {
         const colWidth = this.calcColWidth();
         // add rtl support
         let out;
@@ -748,19 +748,19 @@
         h = Math.max(Math.min(h, this.maxRows - this.innerY), 0);
         return { w, h };
       },
-      updateWidth: function (width, colNum) {
+      updateWidth(width, colNum) {
         this.containerWidth = width;
         if (colNum !== undefined && colNum !== null) {
           this.cols = colNum;
         }
       },
-      compact: function () {
+      compact() {
         this.createStyle();
       },
-      tryMakeDraggable: function () {
-        const self = this;
+      tryMakeDraggable() {
+        const t = this;
         if (this.interactObj === null || this.interactObj === undefined) {
-          this.interactObj = interact(this.$refs.item);
+          this.interactObj = interact(this.$refs.gridItem);
         }
         if (this.draggable && !this.static) {
           const opts = {
@@ -772,7 +772,7 @@
           if (!this.dragEventSet) {
             this.dragEventSet = true;
             this.interactObj.on('dragstart dragmove dragend', function (event) {
-              self.handleDrag(event);
+              t.handleDrag(event);
             });
           }
         } else {
@@ -781,14 +781,14 @@
           });
         }
       },
-      tryMakeResizable: function () {
-        const self = this;
-        if (this.interactObj === null || this.interactObj === undefined) {
-          this.interactObj = interact(this.$refs.item);
+      tryMakeResizable() {
+        const t = this;
+        if (t.interactObj === null || t.interactObj === undefined) {
+          t.interactObj = interact(t.$refs.gridItem);
         }
-        if (this.resizable && !this.static) {
-          let maximum = this.calcPosition(0, 0, this.maxW, this.maxH);
-          let minimum = this.calcPosition(0, 0, this.minW, this.minH);
+        if (t.resizable && !t.static) {
+          let maximum = t.calcPosition(0, 0, t.maxW, t.maxH);
+          let minimum = t.calcPosition(0, 0, t.minW, t.minH);
 
           // console.log("### MAX " + JSON.stringify(maximum));
           // console.log("### MIN " + JSON.stringify(minimum));
@@ -798,11 +798,11 @@
             // allowFrom: "." + this.resizableHandleClass,
             edges: {
               left: false,
-              right: '.' + this.resizableHandleClass,
-              bottom: '.' + this.resizableHandleClass,
+              right: '.' + t.resizableHandleClass,
+              bottom: '.' + t.resizableHandleClass,
               top: false,
             },
-            ignoreFrom: this.resizeIgnoreFrom,
+            ignoreFrom: t.resizeIgnoreFrom,
             restrictSize: {
               min: {
                 height: minimum.height,
@@ -815,13 +815,11 @@
             },
           };
 
-          this.interactObj.resizable(opts);
-          if (!this.resizeEventSet) {
-            this.resizeEventSet = true;
-            this.interactObj.on('resizestart resizemove resizeend', function (
-              event,
-            ) {
-              self.handleResize(event);
+          t.interactObj.resizable(opts);
+          if (!t.resizeEventSet) {
+            t.resizeEventSet = true;
+            t.interactObj.on('resizestart resizemove resizeend', (event) => {
+              t.handleResize(event);
             });
           }
         } else {
@@ -830,7 +828,7 @@
           });
         }
       },
-      autoSize: function () {
+      autoSize() {
         // ok here we want to calculate if a resize is needed
         this.previousW = this.innerW;
         this.previousH = this.innerH;
