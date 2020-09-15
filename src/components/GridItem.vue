@@ -1,5 +1,5 @@
 <template>
-  <div ref="item" class="vue-grid-item" :class="classObj" :style="style">
+  <div ref="gridItem" class="vue-grid-item" :class="classObj" :style="style">
     <slot></slot>
     <span
       v-if="resizableAndNotStatic"

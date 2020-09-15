@@ -1,5 +1,5 @@
 <template>
-  <div ref="item" class="vue-grid-layout" :style="mergedStyle">
+  <div ref="gridLayout" class="vue-grid-layout" :style="mergedStyle">
     <slot></slot>
     <grid-item
       v-show="isDragging"
