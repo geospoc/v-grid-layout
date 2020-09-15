@@ -2,9 +2,7 @@
   "name": "@geospoc/v-grid-layout",
   "version": "0.0.0",
   "description": "A draggable and resizable grid layout, as a Vue component",
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "private": false,
   "sideEffects": false,
   "main": "dist/v-grid-layout.cjs.min.js",
