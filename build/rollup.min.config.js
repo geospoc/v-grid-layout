@@ -13,6 +13,7 @@ export default [
       file: 'dist/v-grid-layout.umd.min.js',
       globals: {
         '@vue/composition-api': 'vueCompositionApi',
+        vue: 'vue',
       },
     },
     plugins: [
@@ -24,7 +25,7 @@ export default [
       terser(),
       vue(),
     ],
-    external: ['@vue/composition-api'],
+    external: ['@vue/composition-api', 'vue'],
   },
   // CommonJS build
   {
@@ -43,6 +44,6 @@ export default [
       terser(),
       vue(),
     ],
-    external: ['@vue/composition-api'],
+    external: ['@vue/composition-api', 'vue'],
   },
 ];
