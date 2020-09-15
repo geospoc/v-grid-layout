@@ -2,7 +2,9 @@
   "name": "@geospoc/v-grid-layout",
   "version": "0.0.0",
   "description": "A draggable and resizable grid layout, as a Vue component",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "private": false,
   "sideEffects": false,
   "main": "dist/v-grid-layout.cjs.min.js",
@@ -29,6 +31,7 @@
     "@ava/babel": "^1.0.1",
     "@babel/core": "^7.11.6",
     "@babel/preset-env": "^7.11.5",
+    "@babel/preset-flow": "^7.10.4",
     "@commitlint/cli": "^11.0.0",
     "@commitlint/config-conventional": "^11.0.0",
     "@geospoc/prettier-config-standard": "^1.0.1",
