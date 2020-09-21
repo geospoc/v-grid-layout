@@ -1,3 +1,4 @@
+import { provide, inject } from '@vue/composition-api';
 // @flow
 export type LayoutItemRequired = {
   w: number,
@@ -644,4 +645,16 @@ export function findAndRemove(array, property, value) {
       array.splice(index, 1);
     }
   });
+}
+
+export function provideEventBus(value) {
+  provide('eventBus', value);
+}
+export function useEventBus() {
+  const eventBus = inject('eventBus', null);
+  if (!eventBus) {
+    return null;
+  } else {
+    return eventBus;
+  }
 }

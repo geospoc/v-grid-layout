@@ -21,9 +21,12 @@
     "lint:eslint:fix": "eslint --fix \"{,!(node_modules|dist|examples)/**/}*.{js,vue}\"",
     "lint:prettier": "prettier --check \"{,!(node_modules|dist|examples)/**/}*.{js,vue}\"",
     "lint:prettier:fix": "prettier --write \"{,!(node_modules|dist|examples)/**/}*.{js,vue}\"",
-    "release": "shipjs prepare"
+    "release": "shipjs prepare",
+    "storybook": "start-storybook"
   },
   "dependencies": {
+    "@vue/composition-api": "^1.0.0-beta.14",
+    "core-js": "^3.6.5",
     "element-resize-detector": "^1.2.1",
     "interactjs": "^1.9.22"
   },
@@ -36,11 +39,14 @@
     "@commitlint/config-conventional": "^11.0.0",
     "@geospoc/prettier-config-standard": "^1.0.1",
     "@rollup/plugin-babel": "^5.2.1",
-    "@rollup/plugin-commonjs": "^15.1.0",
+    "@rollup/plugin-commonjs": "^15.0.0",
+    "@storybook/vue": "^6.0.21",
     "@vue/test-utils": "^1.1.0",
     "ava": "^3.12.1",
     "babel-eslint": "^10.1.0",
+    "babel-loader": "^8.1.0",
     "babel-plugin-module-resolver": "^4.0.0",
+    "babel-preset-vue": "^2.0.2",
     "eslint": "^7.9.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-config-vue": "^2.0.2",
@@ -58,6 +64,7 @@
     "rollup-plugin-vue": "^5.1.6",
     "shipjs": "^0.21.1",
     "vue": "^2.6.12",
+    "vue-loader": "^15.9.3",
     "vue-template-compiler": "^2.6.12"
   },
   "license": "MIT",
