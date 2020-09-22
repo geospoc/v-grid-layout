@@ -12,7 +12,7 @@
     />
   </div>
 </template>
-<script>
+<script lang="ts">
   import Vue from 'vue';
   import {
     defineComponent,
@@ -127,16 +127,15 @@
         default: false,
       },
     },
-    setup(props, { root, emit }) {
+    setup(props: any, { root, emit }: any) {
       provideEventBus(new Vue());
-      const eventBus = useEventBus('eventBus');
-      let erd = null; //for element resize detetctor
-      const width = ref(null);
-      let mergedStyle = reactive({});
+      const eventBus: any = useEventBus();
+      let erd: any = null; //for element resize detetctor
+      const width = ref<number>(0);
+      let mergedStyle = ref({});
       const lastLayoutLength = ref(0);
       let isDragging = ref(false);
-      const gridLayout = ref(null);
-
+      const gridLayout = ref<any | null>(null);
       const placeholder = reactive({
         x: 0,
         y: 0,
@@ -145,8 +144,8 @@
         i: -1,
       });
       let layouts = reactive({});
-      const lastBreakpoint = reactive({});
-      let originalLayout = reactive({});
+      const lastBreakpoint = ref<string>('');
+      let originalLayout = reactive<any>({});
 
       // width
       watch(
@@ -262,7 +261,7 @@
         emit('layout-mounted', props.layout);
         // console.log('root', root);
         root.$nextTick(() => {
-          validateLayout(props.layout);
+          validateLayout(props.layout, '');
           originalLayout = props.layout;
           // const t = this;
           root.$nextTick(() => {
@@ -324,7 +323,7 @@
         }
       }
       function updateHeight() {
-        mergedStyle = {
+        mergedStyle.value = {
           height: containerHeight(),
         };
       }
@@ -346,7 +345,7 @@
         let l = getLayoutItem(props.layout, id);
         //GetLayoutItem sometimes returns null object
         if (l === undefined || l === null) {
-          l = { x: 0, y: 0 };
+          l = { x: 0, y: 0, w: 0, h: 0, i: '' };
         }
 
         if (eventName === 'dragmove' || eventName === 'dragstart') {
@@ -384,7 +383,7 @@
         let l = getLayoutItem(props.layout, id);
         //GetLayoutItem sometimes return null object
         if (l === undefined || l === null) {
-          l = { h: 0, w: 0 };
+          l = { x: 0, y: 0, w: 0, h: 0, i: '' };
         }
 
         let hasCollisions;
@@ -393,7 +392,7 @@
             ...l,
             w,
             h,
-          }).filter((layoutItem) => layoutItem.i !== l.i);
+          }).filter((layoutItem) => l !== null && layoutItem.i !== l.i);
           hasCollisions = collisions.length > 0;
 
           // If we're colliding, we need adjust the placeholder.
@@ -402,8 +401,10 @@
             let leastX = Infinity,
               leastY = Infinity;
             collisions.forEach((layoutItem) => {
-              if (layoutItem.x > l.x) leastX = Math.min(leastX, layoutItem.x);
-              if (layoutItem.y > l.y) leastY = Math.min(leastY, layoutItem.y);
+              if (l !== null && layoutItem.x > l.x)
+                leastX = Math.min(leastX, layoutItem.x);
+              if (l !== null && layoutItem.y > l.y)
+                leastY = Math.min(leastY, layoutItem.y);
             });
 
             if (Number.isFinite(leastX)) l.w = leastX - l.x;
@@ -449,8 +450,8 @@
         let newCols = getColsFromBreakpoint(newBreakpoint, props.cols);
 
         // save actual layout in layouts
-        if (lastBreakpoint != null && layouts[lastBreakpoint])
-          layouts[lastBreakpoint] = cloneLayout(props.layout);
+        if (lastBreakpoint.value != null && layouts[lastBreakpoint.value])
+          layouts[lastBreakpoint.value] = cloneLayout(props.layout);
 
         // Find or generate a new layout.
         let layout = findOrGenerateResponsiveLayout(
@@ -458,7 +459,7 @@
           layouts,
           props.breakpoints,
           newBreakpoint,
-          lastBreakpoint,
+          lastBreakpoint.value,
           newCols,
           props.verticalCompact,
         );
@@ -466,14 +467,14 @@
         // Store the new layout.
         layouts[newBreakpoint] = layout;
 
-        if (lastBreakpoint !== newBreakpoint) {
+        if (lastBreakpoint.value !== newBreakpoint) {
           emit('breakpoint-changed', newBreakpoint, layout);
         }
 
         // new prop sync
         emit('update:layout', layout);
 
-        lastBreakpoint = newBreakpoint;
+        lastBreakpoint.value = newBreakpoint;
         eventBus.$emit(
           'setColNum',
           getColsFromBreakpoint(newBreakpoint, props.cols),
@@ -503,7 +504,7 @@
         //Combine the two arrays of unique entries#
         return uniqueResultOne.concat(uniqueResultTwo);
       }
-      return { placeholder, mergedStyle, isDragging, gridLayout };
+      return { placeholder, mergedStyle, isDragging, gridLayout, width };
     },
   });
 </script>
