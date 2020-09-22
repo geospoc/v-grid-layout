@@ -9,7 +9,7 @@
     <!--<span v-if="draggable" ref="dragHandle" class="vue-draggable-handle"></span>-->
   </div>
 </template>
-<script>
+<script lang="ts">
   import {
     computed,
     defineComponent,
@@ -135,20 +135,20 @@
         default: 'a, button',
       },
     },
-    setup(props, { root, parent, emit }) {
+    setup(props, { root, parent, emit }: any) {
       const cols = ref(1);
       const containerWidth = ref(100);
       const rowHeight = ref(30);
       const margin = ref([10, 10]);
       const maxRows = ref(Infinity);
-      const draggable = ref(null);
-      const resizable = ref(null);
+      const draggable = ref<boolean>(false);
+      const resizable = ref<boolean>(false);
       const useCssTransforms = ref(true);
 
       const isDragging = ref(false);
-      const dragging = ref(null);
+      const dragging = ref<any>({});
       const isResizing = ref(false);
-      let resizing = reactive({});
+      let resizing = reactive<any>({});
       const lastX = ref(NaN);
       const lastY = ref(NaN);
       const lastW = ref(NaN);
@@ -157,17 +157,17 @@
       const rtl = ref(false);
       const dragEventSet = ref(false);
       const resizeEventSet = ref(false);
-      const previousW = ref(null);
-      const previousH = ref(null);
-      const previousX = ref(null);
-      const previousY = ref(null);
+      const previousW = ref<number>(0);
+      const previousH = ref<number>(0);
+      const previousX = ref<number>(0);
+      const previousY = ref<number>(0);
       const innerX = ref(props.x);
       const innerY = ref(props.y);
       const innerW = ref(props.w);
       const innerH = ref(props.h);
-      const gridItem = ref(null);
-      let interactObj = null;
-      const eventBus = useEventBus();
+      const gridItem = ref<any | null>(null);
+      let interactObj: any | null = null;
+      const eventBus: any = useEventBus();
       // computed properties
       const classObj = computed(() => {
         return {
@@ -316,15 +316,15 @@
         },
       );
       watch(
-        () => `$parent.margin${margin}`,
+        () => `parent.margin${margin.value}`,
         (newValue, oldValue) => {
           if (
             !margin ||
-            (margin[0] == margin.value[0] && margin[1] == margin[1]).value
+            (margin[0] == margin.value[0] && margin[1] == margin.value[1])
           ) {
             return;
           }
-          margin.value = margin.map((m) => Number(m));
+          margin.value = margin.value.map((m) => Number(m));
           createStyle();
           emitContainerResized();
         },
@@ -332,10 +332,10 @@
       // created
       // Accessible references of functions for removing in beforeDestroy
       const updateWidthHandler = (width) => {
-        updateWidth(width);
+        updateWidth(width, null);
       };
       const compactHandler = (layout) => {
-        compact(layout);
+        compact();
       };
       const setDraggableHandler = (isDraggable) => {
         if (props.isDraggable === null) {
@@ -360,7 +360,6 @@
       const setColNum = (colNum) => {
         cols.value = parseInt(colNum);
       };
-      // console.log('calling handler');
       eventBus.$on('updateWidth', updateWidthHandler);
       eventBus.$on('compact', compactHandler);
       eventBus.$on('setDraggable', setDraggableHandler);
@@ -370,7 +369,6 @@
       eventBus.$on('directionchange', directionchangeHandler);
       eventBus.$on('setColNum', setColNum);
       rtl.value = getDocumentDir() === 'rtl';
-
       // before unmount
       onBeforeUnmount(() => {
         //Remove listeners
@@ -390,6 +388,7 @@
         cols.value = parent.colNum;
         rowHeight.value = parent.rowHeight;
         containerWidth.value = parent.width !== null ? parent.width : 100;
+
         margin.value = parent.margin !== undefined ? parent.margin : [10, 10];
         maxRows.value = parent.maxRows;
         if (props.isDraggable === null) {
@@ -419,7 +418,6 @@
           innerW.value,
           innerH.value,
         );
-
         if (isDragging.value) {
           pos.top = dragging.value.top;
           //Add rtl support
@@ -462,7 +460,7 @@
       function emitContainerResized() {
         // this.style has width and height with trailing 'px'. The
         // resized event is without them
-        let styleProps = {};
+        let styleProps: any = {};
         for (let prop of ['width', 'height']) {
           let val = style.value[prop];
           let matches = val.match(/^(\d+)px$/);
