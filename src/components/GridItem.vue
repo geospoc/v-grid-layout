@@ -1,6 +1,26 @@
 <template>
   <div ref="gridItem" class="vue-grid-item" :class="classObj" :style="style">
-    <slot></slot>
+    <div class="container">
+      <div class="tabs flex">
+        <div
+          v-for="(tab, tabIdx) in tabs"
+          :key="tabIdx"
+          class="tab flex"
+          :class="activeTab === tabIdx ? 'active' : ''"
+          @click="activeTab = tabIdx"
+        >
+          {{ tab.title }}
+        </div>
+      </div>
+      <div
+        v-for="(tab, tabIdx) in contentTab"
+        :key="tabIdx"
+        class="content flex"
+      >
+        <!-- {{ tab }} -->
+        <component :is="tab.component"></component>
+      </div>
+    </div>
     <span
       v-if="resizableAndNotStatic"
       ref="handle"
@@ -134,6 +154,11 @@
         required: false,
         default: 'a, button',
       },
+      tabs: {
+        type: Array,
+        required: false,
+        default: () => [{ title: 'Tab1' }, { title: 'Tab2' }],
+      },
     },
     setup(props, { root, parent, emit }: any) {
       const cols = ref(1);
@@ -166,9 +191,13 @@
       const innerW = ref(props.w);
       const innerH = ref(props.h);
       const gridItem = ref<any | null>(null);
+      let activeTab = ref<number>(0);
       let interactObj: any | null = null;
       const eventBus: any = useEventBus();
       // computed properties
+      let contentTab = computed(() => {
+        return props.tabs.filter((tab, idx) => idx === activeTab.value);
+      });
       const classObj = computed(() => {
         return {
           'vue-resizable': resizableAndNotStatic.value,
@@ -872,6 +901,8 @@
       }
       return {
         gridItem,
+        activeTab,
+        contentTab,
         style,
         resizableAndNotStatic,
         resizableHandleClass,
@@ -955,4 +986,32 @@
   .vue-grid-item.disable-userselect {
     user-select: none;
   }
+  .flex {
+    display: flex;
+  }
+  .container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  .content {
+    flex: 1;
+  }
+  .tabs {
+    background-color: #424242;
+    color: #ffffff;
+  }
+  .tab {
+    padding: 0.2rem;
+    flex: 1;
+    background-color: #424242;
+    border: solid 1px #ccc;
+    border-top-left-radius: 0.3rem;
+    border-top-right-radius: 0.3rem;
+  }
+  .tab.active {
+    background-color: #ccc;
+    color: #000;
+  }
+  /* @media */
 </style>

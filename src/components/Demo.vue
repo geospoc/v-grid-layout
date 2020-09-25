@@ -19,22 +19,38 @@
       :w="item.w"
       :h="item.h"
       :i="item.i"
+      :tabs="item.tabs"
+      :drag-ignore-from="'.content'"
     >
-      {{ item.i }}
     </grid-item>
   </grid-layout>
 </template>
 
 <script>
-  import GridLayout from './GridLayout.vue';
-  import GridItem from './GridItem.vue';
+  import GridLayout from '@/components/GridLayout';
+  import GridItem from '@/components/GridItem';
+  import Tab2 from '@/components/tabs/Tab2';
+  import Tab4 from '@/components/tabs/Tab4';
   export default {
     name: 'Demo',
-    components: { GridLayout, GridItem },
+    components: {
+      GridLayout,
+      GridItem,
+    },
     data() {
       return {
         layout: [
-          { x: 0, y: 0, w: 2, h: 2, i: '0' },
+          {
+            x: 0,
+            y: 0,
+            w: 2,
+            h: 2,
+            i: '0',
+            tabs: [
+              { title: 'Tab2', component: Tab2 },
+              { title: 'Tab4', component: Tab4 },
+            ],
+          },
           { x: 2, y: 0, w: 2, h: 4, i: '1' },
           { x: 4, y: 0, w: 2, h: 5, i: '2' },
           { x: 6, y: 0, w: 2, h: 3, i: '3' },
