@@ -31,33 +31,33 @@
   import GridItem from '@/components/GridItem';
   import Tab2 from '@/components/tabs/Tab2';
   import Tab4 from '@/components/tabs/Tab4';
-  export default {
-    name: 'Demo',
+  import { defineComponent, ref } from '@vue/composition-api';
+  export default defineComponent({
+    name: 'Basic',
     components: {
       GridLayout,
       GridItem,
     },
-    data() {
-      return {
-        layout: [
-          {
-            x: 0,
-            y: 0,
-            w: 2,
-            h: 2,
-            i: '0',
-            tabs: [
-              { title: 'Tab2', component: Tab2 },
-              { title: 'Tab4', component: Tab4 },
-            ],
-          },
-          { x: 2, y: 0, w: 2, h: 4, i: '1' },
-          { x: 4, y: 0, w: 2, h: 5, i: '2' },
-          { x: 6, y: 0, w: 2, h: 3, i: '3' },
-          { x: 8, y: 0, w: 2, h: 3, i: '4' },
-          { x: 10, y: 0, w: 2, h: 3, i: '5' },
-        ],
-      };
+    setup() {
+      const layout = ref([
+        {
+          x: 0,
+          y: 0,
+          w: 2,
+          h: 2,
+          i: '0',
+          tabs: [
+            { title: 'Tab2', component: Tab2 },
+            { title: 'Tab4', component: Tab4 },
+          ],
+        },
+        { x: 2, y: 0, w: 2, h: 4, i: '1' },
+        { x: 4, y: 0, w: 2, h: 5, i: '2' },
+        { x: 6, y: 0, w: 2, h: 3, i: '3' },
+        { x: 8, y: 0, w: 2, h: 3, i: '4' },
+        { x: 10, y: 0, w: 2, h: 3, i: '5' },
+      ]);
+      return { layout };
     },
-  };
+  });
 </script>
