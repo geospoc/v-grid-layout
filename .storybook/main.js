@@ -1,6 +1,6 @@
 const path = require('path');
 module.exports = {
-  stories: ['../src/components/*.stories.[tj]s'],
+  stories: ['../src/components/*/*.stories.[tj]s'],
   webpackFinal: async (config) => {
     config.resolve.alias = {
       vue$: 'vue/dist/vue.esm.js',
