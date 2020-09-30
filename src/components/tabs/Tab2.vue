@@ -3,9 +3,11 @@
 </template>
 
 <script>
-  export default {
-    name: 'Tab4',
-  };
+  import { defineComponent } from '@vue/composition-api';
+  export default defineComponent({
+    name: 'Tab2',
+    setup() {
+      return;
+    },
+  });
 </script>
-
-<style></style>
