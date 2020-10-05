@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "element-resize-detector": "^1.2.1",
-    "interactjs": "^1.9.22"
+    "interactjs": "^1.10.0"
   },
   "devDependencies": {
     "@ava/babel": "^1.0.1",
