@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "esnext",
-    "module": "commonjs",
+    "module": "esnext",
     "moduleResolution": "node",
     "lib": [
       "esnext",
@@ -17,11 +17,12 @@
     "baseUrl": ".",
     "paths": {
       "~/*": ["./*"],
+      "vue": ["@vue/runtime-dom"],
       "@/*": ["./src/*"]
     }
   },
   "include": [
-    "src"
+    "src",
   ],
   "exclude": [
     "dist",
