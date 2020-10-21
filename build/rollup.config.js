@@ -1,6 +1,11 @@
 import babel from '@rollup/plugin-babel';
 import commonjs from '@rollup/plugin-commonjs';
 import vue from 'rollup-plugin-vue';
+import typescript from 'rollup-plugin-typescript2';
+import alias from '@rollup/plugin-alias';
+import resolve from '@rollup/plugin-node-resolve';
+
+const extensions = ['.js', '.ts', '.vue'];
 
 export default [
   // ESM build to be used with webpack/rollup.
@@ -10,16 +15,26 @@ export default [
       format: 'esm',
       name: 'v-grid-layout',
       file: 'dist/v-grid-layout.esm.js',
+      sourcemap: true,
     },
     plugins: [
+      alias({
+        entries: {
+          vue: 'vue/dist/vue.runtime.esm-browser.prod.js',
+        },
+      }),
+      resolve({ extensions, browser: true }),
       babel({
         babelHelpers: 'bundled',
         exclude: 'node_modules/**',
       }),
       commonjs(),
       vue(),
+      typescript({
+        include: [/\.tsx?$/, /\.vue\?.*?lang=ts/],
+        useTsconfigDeclarationDir: true,
+      }),
     ],
-    external: ['@vue/composition-api', 'vue'],
   },
   // CommonJS build
   {
@@ -28,16 +43,23 @@ export default [
       format: 'cjs',
       name: 'v-grid-layout',
       file: 'dist/v-grid-layout.cjs.js',
+      sourcemap: true,
     },
     plugins: [
+      alias({
+        entries: {
+          vue: 'vue/dist/vue.runtime.esm-browser.prod.js',
+        },
+      }),
+      resolve({ extensions, browser: true }),
       babel({
         babelHelpers: 'bundled',
         exclude: 'node_modules/**',
       }),
       commonjs(),
       vue(),
+      typescript(),
     ],
-    external: ['@vue/composition-api', 'vue'],
   },
   // UMD build.
   {
@@ -46,19 +68,22 @@ export default [
       format: 'umd',
       name: 'v-grid-layout',
       file: 'dist/v-grid-layout.umd.js',
-      globals: {
-        '@vue/composition-api': 'vueCompositionApi',
-        vue: 'vue',
-      },
+      sourcemap: true,
     },
     plugins: [
+      alias({
+        entries: {
+          vue: 'vue/dist/vue.runtime.esm-browser.prod.js',
+        },
+      }),
+      resolve({ extensions, browser: true }),
       babel({
         babelHelpers: 'bundled',
         exclude: 'node_modules/**',
       }),
       commonjs(),
       vue(),
+      typescript(),
     ],
-    external: ['@vue/composition-api', 'vue'],
   },
 ];
