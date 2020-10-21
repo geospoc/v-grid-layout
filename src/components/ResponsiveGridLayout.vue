@@ -109,7 +109,7 @@
       width: function () {
         this.$nextTick(function () {
           //this.$broadcast("updateWidth", this.width);
-          this.eventBus.$emit('updateWidth', this.width);
+          this.eventBus.emit('updateWidth', this.width);
           this.updateHeight();
         });
       },
@@ -117,16 +117,16 @@
         this.layoutUpdate();
       },
       colNum: function (val) {
-        this.eventBus.$emit('setColNum', val);
+        this.eventBus.emit('setColNum', val);
       },
       rowHeight: function () {
-        this.eventBus.$emit('setRowHeight', this.rowHeight);
+        this.eventBus.emit('setRowHeight', this.rowHeight);
       },
       isDraggable: function () {
-        this.eventBus.$emit('setDraggable', this.isDraggable);
+        this.eventBus.emit('setDraggable', this.isDraggable);
       },
       isResizable: function () {
-        this.eventBus.$emit('setResizable', this.isResizable);
+        this.eventBus.emit('setResizable', this.isResizable);
       },
     },
     created() {
@@ -143,13 +143,13 @@
 
       self._provided.eventBus = new Vue();
       self.eventBus = self._provided.eventBus;
-      self.eventBus.$on('resizeEvent', self.resizeEventHandler);
-      self.eventBus.$on('dragEvent', self.dragEventHandler);
+      self.eventBus.on('resizeEvent', self.resizeEventHandler);
+      self.eventBus.on('dragEvent', self.dragEventHandler);
     },
     beforeDestroy: function () {
       //Remove listeners
-      this.eventBus.$off('resizeEvent', this.resizeEventHandler);
-      this.eventBus.$off('dragEvent', this.dragEventHandler);
+      this.eventBus.off('resizeEvent', this.resizeEventHandler);
+      this.eventBus.off('dragEvent', this.dragEventHandler);
       removeWindowEventListener('resize', this.onWindowResize);
     },
     mounted: function () {
@@ -206,7 +206,7 @@
             this.lastLayoutLength = this.layout.length;
           }
           compact(this.layout, this.verticalCompact);
-          this.eventBus.$emit('updateWidth', this.width);
+          this.eventBus.emit('updateWidth', this.width);
           this.updateHeight();
         }
       },
@@ -243,7 +243,7 @@
             this.isDragging = true;
           });
           //this.$broadcast("updateWidth", this.width);
-          this.eventBus.$emit('updateWidth', this.width);
+          this.eventBus.emit('updateWidth', this.width);
         } else {
           this.$nextTick(function () {
             this.isDragging = false;
@@ -261,7 +261,7 @@
         this.layout = moveElement(this.layout, l, x, y, true);
         compact(this.layout, this.verticalCompact);
         // needed because vue can't detect changes on array element properties
-        this.eventBus.$emit('compact');
+        this.eventBus.emit('compact');
         this.updateHeight();
         if (eventName === 'dragend') this.$emit('layout-updated', this.layout);
       },
@@ -276,7 +276,7 @@
             this.isDragging = true;
           });
           //this.$broadcast("updateWidth", this.width);
-          this.eventBus.$emit('updateWidth', this.width);
+          this.eventBus.emit('updateWidth', this.width);
         } else {
           this.$nextTick(function () {
             this.isDragging = false;
@@ -290,7 +290,7 @@
         l.h = h;
         l.w = w;
         compact(this.layout, this.verticalCompact);
-        this.eventBus.$emit('compact');
+        this.eventBus.emit('compact');
         this.updateHeight();
         if (eventName === 'resizeend')
           this.$emit('layout-updated', this.layout);

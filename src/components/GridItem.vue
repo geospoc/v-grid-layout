@@ -1,6 +1,26 @@
 <template>
   <div ref="gridItem" class="vue-grid-item" :class="classObj" :style="style">
-    <slot></slot>
+    <div class="container">
+      <div class="tabs flex">
+        <div
+          v-for="(tab, tabIdx) in tabs"
+          :key="tabIdx"
+          class="tab flex"
+          :class="activeTab === tabIdx ? 'active' : ''"
+          @click="activeTab = tabIdx"
+        >
+          {{ tab.title }}
+        </div>
+      </div>
+      <div
+        v-for="(tab, tabIdx) in contentTab"
+        :key="tabIdx"
+        class="content flex"
+      >
+        <!-- {{ tab }} -->
+        <component :is="tab.component"></component>
+      </div>
+    </div>
     <span
       v-if="resizableAndNotStatic"
       ref="handle"
@@ -9,12 +29,24 @@
     <!--<span v-if="draggable" ref="dragHandle" class="vue-draggable-handle"></span>-->
   </div>
 </template>
-<script>
+<script lang="ts">
+  import {
+    computed,
+    defineComponent,
+    getCurrentInstance,
+    onBeforeUnmount,
+    onMounted,
+    reactive,
+    ref,
+    watch,
+  } from 'vue';
   import {
     setTopLeft,
     setTopRight,
     setTransformRtl,
     setTransform,
+    useEventBus,
+    provideEventBus,
   } from '../helpers/utils';
   import {
     getControlPosition,
@@ -22,10 +54,10 @@
   } from '../helpers/draggableUtils';
   import { getDocumentDir } from '../helpers/DOM';
   //    var eventBus = require('./eventBus');
+  import interact from 'interactjs';
+  //  interact = require('interactjs');
 
-  let interact = require('interactjs');
-
-  export default {
+  export default defineComponent({
     name: 'GridItem',
     props: {
       /*cols: {
@@ -125,298 +157,362 @@
         required: false,
         default: 'a, button',
       },
+      tabs: {
+        type: Array,
+        required: false,
+        default: () => [{ title: 'Tab1' }, { title: 'Tab2' }],
+      },
     },
-    inject: ['eventBus'],
-    data() {
-      return {
-        cols: 1,
-        containerWidth: 100,
-        rowHeight: 30,
-        margin: [10, 10],
-        maxRows: Infinity,
-        draggable: null,
-        resizable: null,
-        useCssTransforms: true,
+    setup(props, { emit }) {
+      const root = getCurrentInstance();
+      const parent = root.parent.ctx;
+      const cols = ref(1);
+      const containerWidth = ref(100);
+      const rowHeight = ref(30);
+      const margin = ref([10, 10]);
+      const maxRows = ref(Infinity);
+      const draggable = ref<boolean>(false);
+      const resizable = ref<boolean>(false);
+      const useCssTransforms = ref(true);
 
-        isDragging: false,
-        dragging: null,
-        isResizing: false,
-        resizing: null,
-        lastX: NaN,
-        lastY: NaN,
-        lastW: NaN,
-        lastH: NaN,
-        style: {},
-        rtl: false,
-
-        dragEventSet: false,
-        resizeEventSet: false,
-
-        previousW: null,
-        previousH: null,
-        previousX: null,
-        previousY: null,
-        innerX: this.x,
-        innerY: this.y,
-        innerW: this.w,
-        innerH: this.h,
-      };
-    },
-    computed: {
-      classObj() {
+      const isDragging = ref(false);
+      const dragging = ref<any>({});
+      const isResizing = ref(false);
+      let resizing = reactive<any>({});
+      const lastX = ref(NaN);
+      const lastY = ref(NaN);
+      const lastW = ref(NaN);
+      const lastH = ref(NaN);
+      let style = ref({});
+      const rtl = ref(false);
+      const dragEventSet = ref(false);
+      const resizeEventSet = ref(false);
+      const previousW = ref<number>(0);
+      const previousH = ref<number>(0);
+      const previousX = ref<number>(0);
+      const previousY = ref<number>(0);
+      const innerX = ref(props.x);
+      const innerY = ref(props.y);
+      const innerW = ref(props.w);
+      const innerH = ref(props.h);
+      const gridItem = ref<any | null>(null);
+      let activeTab = ref<number>(0);
+      let interactObj: any | null = null;
+      const eventBus: any = useEventBus();
+      // computed properties
+      let contentTab = computed(() => {
+        return props.tabs.filter((tab, idx) => idx === activeTab.value);
+      });
+      const classObj = computed(() => {
         return {
-          'vue-resizable': this.resizableAndNotStatic,
-          static: this.static,
-          resizing: this.isResizing,
-          'vue-draggable-dragging': this.isDragging,
-          cssTransforms: this.useCssTransforms,
-          'render-rtl': this.renderRtl,
-          'disable-userselect': this.isDragging,
-          'no-touch': this.isAndroid && this.draggableOrResizableAndNotStatic,
+          'vue-resizable': resizableAndNotStatic.value,
+          static: props.static,
+          resizing: isResizing.value,
+          'vue-draggable-dragging': isDragging.value,
+          cssTransforms: useCssTransforms.value,
+          'render-rtl': renderRtl.value,
+          'disable-userselect': isDragging.value,
+          'no-touch': isAndroid.value && draggableOrResizableAndNotStatic.value,
         };
-      },
-      resizableAndNotStatic() {
-        return this.resizable && !this.static;
-      },
-      draggableOrResizableAndNotStatic() {
-        return (this.draggable || this.resizable) && !this.static;
-      },
-      isAndroid() {
+      });
+      const resizableAndNotStatic = computed(() => {
+        return resizable.value && !props.static;
+      });
+      const draggableOrResizableAndNotStatic = computed(() => {
+        return (draggable.value || resizable.value) && !props.static;
+      });
+      const isAndroid = computed(() => {
         return navigator.userAgent.toLowerCase().indexOf('android') !== -1;
-      },
-      renderRtl() {
-        return this.$parent.isMirrored ? !this.rtl : this.rtl;
-      },
-      resizableHandleClass() {
-        if (this.renderRtl) {
+      });
+      const renderRtl = computed(() => {
+        return parent.isMirrored ? !rtl.value : rtl.value;
+      });
+      const resizableHandleClass = computed(() => {
+        if (renderRtl.value) {
           return 'vue-resizable-handle vue-rtl-resizable-handle';
         } else {
           return 'vue-resizable-handle';
         }
-      },
-    },
-    watch: {
-      isDraggable() {
-        this.draggable = this.isDraggable;
-      },
-      static() {
-        this.tryMakeDraggable();
-        this.tryMakeResizable();
-      },
-      draggable() {
-        this.tryMakeDraggable();
-      },
-      isResizable() {
-        this.resizable = this.isResizable;
-      },
-      resizable() {
-        this.tryMakeResizable();
-      },
-      rowHeight() {
-        this.createStyle();
-        this.emitContainerResized();
-      },
-      cols() {
-        this.tryMakeResizable();
-        this.createStyle();
-        this.emitContainerResized();
-      },
-      containerWidth() {
-        this.tryMakeResizable();
-        this.createStyle();
-        this.emitContainerResized();
-      },
-      x(newVal) {
-        this.innerX = newVal;
-        this.createStyle();
-      },
-      y(newVal) {
-        this.innerY = newVal;
-        this.createStyle();
-      },
-      h(newVal) {
-        this.innerH = newVal;
-        this.createStyle();
-        // this.emitContainerResized();
-      },
-      w(newVal) {
-        this.innerW = newVal;
-        this.createStyle();
-        // this.emitContainerResized();
-      },
-      renderRtl() {
-        // console.log("### renderRtl");
-        this.tryMakeResizable();
-        this.createStyle();
-      },
-      minH() {
-        this.tryMakeResizable();
-      },
-      maxH() {
-        this.tryMakeResizable();
-      },
-      minW() {
-        this.tryMakeResizable();
-      },
-      maxW() {
-        this.tryMakeResizable();
-      },
-      '$parent.margin'(margin) {
-        const t = this;
-        if (!margin || (margin[0] == t.margin[0] && margin[1] == t.margin[1])) {
-          return;
-        }
-        t.margin = margin.map((m) => Number(m));
-        t.createStyle();
-        t.emitContainerResized();
-      },
-    },
-    created() {
-      const t = this;
+      });
+      // watchers
+      // isDraggable
+      watch(
+        () => props.isDraggable,
+        (newValue, oldValue) => {
+          draggable.value = newValue;
+        },
+      );
+      watch(
+        () => props.static,
+        (newValue, oldValue) => {
+          tryMakeDraggable();
+          tryMakeResizable();
+        },
+      );
+      watch(
+        () => draggable.value,
+        (newValue, oldValue) => {
+          tryMakeDraggable();
+        },
+      );
+      watch(
+        () => props.isResizable,
+        (newValue, oldValue) => {
+          resizable.value = newValue;
+        },
+      );
+      watch(
+        () => resizable.value,
+        (newValue, oldValue) => {
+          tryMakeResizable();
+        },
+      );
+      watch(
+        () => rowHeight.value,
+        (newValue, oldValue) => {
+          createStyle();
+          emitContainerResized();
+        },
+      );
+      watch(
+        () => cols.value,
+        (newValue, oldValue) => {
+          tryMakeResizable();
+          createStyle();
+          emitContainerResized();
+        },
+      );
+      watch(
+        () => containerWidth.value,
+        (newValue, oldValue) => {
+          tryMakeResizable();
+          createStyle();
+          emitContainerResized();
+        },
+      );
+      watch(
+        () => props.x,
+        (newValue, oldValue) => {
+          innerX.value = newValue;
+          createStyle();
+        },
+      );
+      watch(
+        () => props.y,
+        (newValue, oldValue) => {
+          innerY.value = newValue;
+          createStyle();
+        },
+      );
+      watch(
+        () => props.h,
+        (newValue, oldValue) => {
+          innerH.value = newValue;
+          createStyle();
+        },
+      );
+      watch(
+        () => props.w,
+        (newValue, oldValue) => {
+          innerW.value = newValue;
+          createStyle();
+        },
+      );
+      watch(
+        () => renderRtl.value,
+        (newValue, oldValue) => {
+          tryMakeResizable();
+          createStyle();
+        },
+      );
+      watch(
+        () => props.minH,
+        (newValue, oldValue) => {
+          tryMakeResizable();
+        },
+      );
+      watch(
+        () => props.maxH,
+        (newValue, oldValue) => {
+          tryMakeResizable();
+        },
+      );
+      watch(
+        () => props.minW,
+        (newValue, oldValue) => {
+          tryMakeResizable();
+        },
+      );
+      watch(
+        () => props.maxW,
+        (newValue, oldValue) => {
+          tryMakeResizable();
+        },
+      );
+      watch(
+        () => `parent.margin${margin.value}`,
+        (newValue, oldValue) => {
+          if (
+            !margin ||
+            (margin[0] == margin.value[0] && margin[1] == margin.value[1])
+          ) {
+            return;
+          }
+          margin.value = margin.value.map((m) => Number(m));
+          createStyle();
+          emitContainerResized();
+        },
+      );
+      // created
       // Accessible references of functions for removing in beforeDestroy
-      t.updateWidthHandler = (width) => {
-        t.updateWidth(width);
+      const updateWidthHandler = (width) => {
+        updateWidth(width, null);
       };
-      t.compactHandler = (layout) => {
-        t.compact(layout);
+      const compactHandler = (layout) => {
+        compact();
       };
-      t.setDraggableHandler = (isDraggable) => {
-        if (t.isDraggable === null) {
-          t.draggable = isDraggable;
+      const setDraggableHandler = (isDraggable) => {
+        if (props.isDraggable === null) {
+          draggable.value = isDraggable;
         }
       };
-      t.setResizableHandler = (isResizable) => {
-        if (t.isResizable === null) {
-          t.resizable = isResizable;
+      const setResizableHandler = (isResizable) => {
+        if (props.isResizable === null) {
+          resizable.value = isResizable;
         }
       };
-      t.setRowHeightHandler = (rowHeight) => {
-        t.rowHeight = rowHeight;
+      const setRowHeightHandler = (rowHeight) => {
+        rowHeight.value = rowHeight;
       };
-      t.setMaxRowsHandler = (maxRows) => {
-        t.maxRows = maxRows;
+      const setMaxRowsHandler = (maxRows) => {
+        maxRows.value = maxRows;
       };
-      t.directionchangeHandler = () => {
-        t.rtl = getDocumentDir() === 'rtl';
-        t.compact();
+      const directionchangeHandler = () => {
+        rtl.value = getDocumentDir() === 'rtl';
+        compact();
       };
-      t.setColNum = (colNum) => {
-        t.cols = parseInt(colNum);
+      const setColNum = (colNum) => {
+        cols.value = parseInt(colNum);
       };
-      t.eventBus.$on('updateWidth', t.updateWidthHandler);
-      t.eventBus.$on('compact', t.compactHandler);
-      t.eventBus.$on('setDraggable', t.setDraggableHandler);
-      t.eventBus.$on('setResizable', t.setResizableHandler);
-      t.eventBus.$on('setRowHeight', t.setRowHeightHandler);
-      t.eventBus.$on('setMaxRows', t.setMaxRowsHandler);
-      t.eventBus.$on('directionchange', t.directionchangeHandler);
-      t.eventBus.$on('setColNum', t.setColNum);
-      t.rtl = getDocumentDir() === 'rtl';
-    },
-    beforeDestroy() {
-      const t = this;
-      //Remove listeners
-      t.eventBus.$off('updateWidth', t.updateWidthHandler);
-      t.eventBus.$off('compact', t.compactHandler);
-      t.eventBus.$off('setDraggable', t.setDraggableHandler);
-      t.eventBus.$off('setResizable', t.setResizableHandler);
-      t.eventBus.$off('setRowHeight', t.setRowHeightHandler);
-      t.eventBus.$off('setMaxRows', t.setMaxRowsHandler);
-      t.eventBus.$off('directionchange', t.directionchangeHandler);
-      t.eventBus.$off('setColNum', t.setColNum);
-      if (t.interactObj) {
-        t.interactObj.unset(); // destroy interact intance
-      }
-    },
-    mounted() {
-      const t = this;
-      t.cols = t.$parent.colNum;
-      t.rowHeight = t.$parent.rowHeight;
-      t.containerWidth = t.$parent.width !== null ? t.$parent.width : 100;
-      t.margin = t.$parent.margin !== undefined ? t.$parent.margin : [10, 10];
-      t.maxRows = t.$parent.maxRows;
-      if (t.isDraggable === null) {
-        t.draggable = t.$parent.isDraggable;
-      } else {
-        t.draggable = t.isDraggable;
-      }
-      if (t.isResizable === null) {
-        t.resizable = t.$parent.isResizable;
-      } else {
-        t.resizable = t.isResizable;
-      }
-      t.useCssTransforms = t.$parent.useCssTransforms;
-      t.createStyle();
-    },
-    methods: {
-      createStyle() {
-        const t = this;
-        if (t.x + t.w > t.cols) {
-          t.innerX = 0;
-          t.innerW = t.w > t.cols ? t.cols : t.w;
-        } else {
-          t.innerX = t.x;
-          t.innerW = t.w;
+      eventBus.on('updateWidth', updateWidthHandler);
+      eventBus.on('compact', compactHandler);
+      eventBus.on('setDraggable', setDraggableHandler);
+      eventBus.on('setResizable', setResizableHandler);
+      eventBus.on('setRowHeight', setRowHeightHandler);
+      eventBus.on('setMaxRows', setMaxRowsHandler);
+      eventBus.on('directionchange', directionchangeHandler);
+      eventBus.on('setColNum', setColNum);
+      rtl.value = getDocumentDir() === 'rtl';
+      // before unmount
+      onBeforeUnmount(() => {
+        //Remove listeners
+        eventBus.off('updateWidth', updateWidthHandler);
+        eventBus.off('compact', compactHandler);
+        eventBus.off('setDraggable', setDraggableHandler);
+        eventBus.off('setResizable', setResizableHandler);
+        eventBus.off('setRowHeight', setRowHeightHandler);
+        eventBus.off('setMaxRows', setMaxRowsHandler);
+        eventBus.off('directionchange', directionchangeHandler);
+        eventBus.off('setColNum', setColNum);
+        if (interactObj) {
+          interactObj.unset(); // destroy interact intance
         }
-        let pos = t.calcPosition(t.innerX, t.innerY, t.innerW, t.innerH);
+      });
+      onMounted(() => {
+        cols.value = parent.colNum;
+        rowHeight.value = parent.rowHeight;
+        containerWidth.value = parent.width !== null ? parent.width : 100;
 
-        if (t.isDragging) {
-          pos.top = t.dragging.top;
-          //                    Add rtl support
-          if (t.renderRtl) {
-            pos.right = t.dragging.left;
+        margin.value = parent.margin !== undefined ? parent.margin : [10, 10];
+        maxRows.value = parent.maxRows;
+        if (props.isDraggable === null) {
+          draggable.value = parent.isDraggable;
+        } else {
+          draggable.value = props.isDraggable;
+        }
+        if (props.isResizable === null) {
+          resizable.value = parent.isResizable;
+        } else {
+          resizable.value = props.isResizable;
+        }
+        useCssTransforms.value = parent.useCssTransforms;
+        createStyle();
+        // provideEventBus(eventBus);
+      });
+      function createStyle() {
+        if (props.x + props.w > cols.value) {
+          innerX.value = 0;
+          innerW.value = props.w > cols.value ? cols.value : props.w;
+        } else {
+          innerX.value = props.x;
+          innerW.value = props.w;
+        }
+        let pos = calcPosition(
+          innerX.value,
+          innerY.value,
+          innerW.value,
+          innerH.value,
+        );
+        if (isDragging.value) {
+          pos.top = dragging.value.top;
+          //Add rtl support
+          if (renderRtl.value) {
+            pos.right = dragging.value.left;
           } else {
-            pos.left = t.dragging.left;
+            pos.left = dragging.value.left;
           }
         }
-        if (t.isResizing) {
-          pos.width = t.resizing.width;
-          pos.height = t.resizing.height;
+        if (isResizing.value) {
+          pos.width = resizing.width;
+          pos.height = resizing.height;
         }
 
-        let style;
+        let styleObj;
         // CSS Transforms support (default)
-        if (t.useCssTransforms) {
-          //                    Add rtl support
-          if (t.renderRtl) {
-            style = setTransformRtl(pos.top, pos.right, pos.width, pos.height);
+        if (useCssTransforms.value) {
+          //Add rtl support
+          if (renderRtl.value) {
+            styleObj = setTransformRtl(
+              pos.top,
+              pos.right,
+              pos.width,
+              pos.height,
+            );
           } else {
-            style = setTransform(pos.top, pos.left, pos.width, pos.height);
+            styleObj = setTransform(pos.top, pos.left, pos.width, pos.height);
           }
         } else {
           // top,left (slow)
-          //                    Add rtl support
-          if (t.renderRtl) {
-            style = setTopRight(pos.top, pos.right, pos.width, pos.height);
+          //Add rtl support
+          if (renderRtl.value) {
+            styleObj = setTopRight(pos.top, pos.right, pos.width, pos.height);
           } else {
-            style = setTopLeft(pos.top, pos.left, pos.width, pos.height);
+            styleObj = setTopLeft(pos.top, pos.left, pos.width, pos.height);
           }
         }
-        t.style = style;
-      },
-      emitContainerResized() {
-        const t = this;
+        style.value = styleObj;
+      }
+      function emitContainerResized() {
         // this.style has width and height with trailing 'px'. The
         // resized event is without them
-        let styleProps = {};
+        let styleProps: any = {};
         for (let prop of ['width', 'height']) {
-          let val = t.style[prop];
+          let val = style.value[prop];
           let matches = val.match(/^(\d+)px$/);
           if (!matches) return;
           styleProps[prop] = matches[1];
         }
-        t.$emit(
+        emit(
           'container-resized',
-          t.i,
-          t.h,
-          t.w,
+          props.i,
+          props.h,
+          props.w,
           styleProps.height,
           styleProps.width,
         );
-      },
-      handleResize(event) {
-        const t = this;
-        if (t.static) return;
+      }
+      function handleResize(event) {
+        if (props.static) return;
         const position = getControlPosition(event);
         // Get the current drag point from the event. t is used as the offset.
         if (position == null) return; // not possible but satisfies flow
@@ -426,54 +522,59 @@
         let pos;
         switch (event.type) {
           case 'resizestart': {
-            t.previousW = t.innerW;
-            t.previousH = t.innerH;
-            pos = t.calcPosition(t.innerX, t.innerY, t.innerW, t.innerH);
+            previousW.value = innerW.value;
+            previousH.value = innerH.value;
+            pos = calcPosition(
+              innerX.value,
+              innerY.value,
+              innerW.value,
+              innerH.value,
+            );
             newSize.width = pos.width;
             newSize.height = pos.height;
-            t.resizing = newSize;
-            t.isResizing = true;
+            resizing = newSize;
+            isResizing.value = true;
             break;
           }
           case 'resizemove': {
-            //                        console.log("### resize => " + event.type + ", lastW=" + t.lastW + ", lastH=" + t.lastH);
-            const coreEvent = createCoreData(t.lastW, t.lastH, x, y);
-            if (t.renderRtl) {
-              newSize.width = t.resizing.width - coreEvent.deltaX;
+            const coreEvent = createCoreData(lastW.value, lastH.value, x, y);
+            if (renderRtl.value) {
+              newSize.width = resizing.width - coreEvent.deltaX;
             } else {
-              newSize.width = t.resizing.width + coreEvent.deltaX;
+              newSize.width = resizing.width + coreEvent.deltaX;
             }
-            newSize.height = t.resizing.height + coreEvent.deltaY;
-
-            ///console.log("### resize => " + event.type + ", deltaX=" + coreEvent.deltaX + ", deltaY=" + coreEvent.deltaY);
-            t.resizing = newSize;
+            newSize.height = resizing.height + coreEvent.deltaY;
+            resizing = newSize;
             break;
           }
           case 'resizeend': {
-            //console.log("### resize end => x=" +t.innerX + " y=" + t.innerY + " w=" + t.innerW + " h=" + t.innerH);
-            pos = t.calcPosition(t.innerX, t.innerY, t.innerW, t.innerH);
+            pos = calcPosition(
+              innerX.value,
+              innerY.value,
+              innerW.value,
+              innerH.value,
+            );
             newSize.width = pos.width;
             newSize.height = pos.height;
-            //                        console.log("### resize end => " + JSON.stringify(newSize));
-            t.resizing = null;
-            t.isResizing = false;
+            resizing = null;
+            isResizing.value = false;
             break;
           }
         }
 
         // Get new WH
-        pos = t.calcWH(newSize.height, newSize.width);
-        if (pos.w < t.minW) {
-          pos.w = t.minW;
+        pos = calcWH(newSize.height, newSize.width);
+        if (pos.w < props.minW) {
+          pos.w = props.minW;
         }
-        if (pos.w > t.maxW) {
-          pos.w = t.maxW;
+        if (pos.w > props.maxW) {
+          pos.w = props.maxW;
         }
-        if (pos.h < t.minH) {
-          pos.h = t.minH;
+        if (pos.h < props.minH) {
+          pos.h = props.minH;
         }
-        if (pos.h > t.maxH) {
-          pos.h = t.maxH;
+        if (pos.h > props.maxH) {
+          pos.h = props.maxH;
         }
 
         if (pos.h < 1) {
@@ -483,32 +584,30 @@
           pos.w = 1;
         }
 
-        t.lastW = x;
-        t.lastH = y;
+        lastW.value = x;
+        lastH.value = y;
 
-        if (t.innerW !== pos.w || t.innerH !== pos.h) {
-          t.$emit('resize', t.i, pos.h, pos.w, newSize.height, newSize.width);
+        if (innerW.value !== pos.w || innerH.value !== pos.h) {
+          emit('resize', props.i, pos.h, pos.w, newSize.height, newSize.width);
         }
         if (
           event.type === 'resizeend' &&
-          (t.previousW !== t.innerW || t.previousH !== t.innerH)
+          (previousW.value !== innerW.value || previousH.value !== innerH.value)
         ) {
-          t.$emit('resized', t.i, pos.h, pos.w, newSize.height, newSize.width);
+          emit('resized', props.i, pos.h, pos.w, newSize.height, newSize.width);
         }
-        t.eventBus.$emit(
-          'resizeEvent',
-          event.type,
-          t.i,
-          t.innerX,
-          t.innerY,
-          pos.h,
-          pos.w,
-        );
-      },
-      handleDrag(event) {
-        const t = this;
-        if (t.static) return;
-        if (t.isResizing) return;
+        eventBus.emit('resizeEvent', {
+          eventType: event.type,
+          i: props.i,
+          x: innerX.value,
+          y: innerY.value,
+          h: pos.h,
+          w: pos.w,
+        });
+      }
+      function handleDrag(event) {
+        if (props.static) return;
+        if (isResizing.value) return;
 
         const position = getControlPosition(event);
 
@@ -520,131 +619,135 @@
         let newPosition = { top: 0, left: 0 };
         switch (event.type) {
           case 'dragstart': {
-            t.previousX = t.innerX;
-            t.previousY = t.innerY;
+            previousX.value = innerX.value;
+            previousY.value = innerY.value;
 
             let parentRect = event.target.offsetParent.getBoundingClientRect();
             let clientRect = event.target.getBoundingClientRect();
-            if (t.renderRtl) {
+            if (renderRtl.value) {
               newPosition.left = (clientRect.right - parentRect.right) * -1;
             } else {
               newPosition.left = clientRect.left - parentRect.left;
             }
             newPosition.top = clientRect.top - parentRect.top;
-            t.dragging = newPosition;
-            t.isDragging = true;
+            dragging.value = newPosition;
+            isDragging.value = true;
             break;
           }
           case 'dragend': {
-            if (!t.isDragging) return;
+            if (!isDragging.value) return;
             let parentRect = event.target.offsetParent.getBoundingClientRect();
             let clientRect = event.target.getBoundingClientRect();
             //                        Add rtl support
-            if (t.renderRtl) {
+            if (renderRtl.value) {
               newPosition.left = (clientRect.right - parentRect.right) * -1;
             } else {
               newPosition.left = clientRect.left - parentRect.left;
             }
             newPosition.top = clientRect.top - parentRect.top;
-            //                        console.log("### drag end => " + JSON.stringify(newPosition));
-            //                        console.log("### DROP: " + JSON.stringify(newPosition));
-            t.dragging = null;
-            t.isDragging = false;
-            // shouldUpdate = true;
+            isDragging.value = false;
             break;
           }
           case 'dragmove': {
-            const coreEvent = createCoreData(t.lastX, t.lastY, x, y);
-            //                        Add rtl support
-            if (t.renderRtl) {
-              newPosition.left = t.dragging.left - coreEvent.deltaX;
+            const coreEvent = createCoreData(lastX.value, lastY.value, x, y);
+            //Add rtl support
+            if (renderRtl.value) {
+              newPosition.left = dragging.value.left - coreEvent.deltaX;
             } else {
-              newPosition.left = t.dragging.left + coreEvent.deltaX;
+              newPosition.left = dragging.value.left + coreEvent.deltaX;
             }
-            newPosition.top = t.dragging.top + coreEvent.deltaY;
-            //                        console.log("### drag => " + event.type + ", x=" + x + ", y=" + y);
-            //                        console.log("### drag => " + event.type + ", deltaX=" + coreEvent.deltaX + ", deltaY=" + coreEvent.deltaY);
-            //                        console.log("### drag end => " + JSON.stringify(newPosition));
-            t.dragging = newPosition;
+            newPosition.top = dragging.value.top + coreEvent.deltaY;
+            dragging.value = newPosition;
             break;
           }
         }
 
         // Get new XY
         let pos;
-        if (t.renderRtl) {
-          pos = t.calcXY(newPosition.top, newPosition.left);
+        if (renderRtl.value) {
+          pos = calcXY(newPosition.top, newPosition.left);
         } else {
-          pos = t.calcXY(newPosition.top, newPosition.left);
+          pos = calcXY(newPosition.top, newPosition.left);
         }
 
-        t.lastX = x;
-        t.lastY = y;
+        lastX.value = x;
+        lastY.value = y;
 
-        if (t.innerX !== pos.x || t.innerY !== pos.y) {
-          t.$emit('move', t.i, pos.x, pos.y);
+        if (innerX.value !== pos.x || innerY.value !== pos.y) {
+          emit('move', props.i, pos.x, pos.y);
         }
         if (
           event.type === 'dragend' &&
-          (t.previousX !== t.innerX || t.previousY !== t.innerY)
+          (previousX.value !== innerX.value || previousY.value !== innerY.value)
         ) {
-          t.$emit('moved', t.i, pos.x, pos.y);
+          emit('moved', props.i, pos.x, pos.y);
         }
-        t.eventBus.$emit(
-          'dragEvent',
-          event.type,
-          t.i,
-          pos.x,
-          pos.y,
-          t.innerH,
-          t.innerW,
-        );
-      },
-      calcPosition(x, y, w, h) {
-        const t = this;
-        const colWidth = t.calcColWidth();
+        eventBus.emit('dragEvent', {
+          eventType: event.type,
+          i: props.i,
+          x: pos.x,
+          y: pos.y,
+          h: innerH.value,
+          w: innerW.value,
+        });
+        // eventBus.emit(
+        //   'dragEvent',
+        //   event.type,
+        //   props.i,
+        //   pos.x,
+        //   pos.y,
+        //   innerH.value,
+        //   innerW.value,
+        // );
+      }
+      function calcPosition(x, y, w, h) {
+        const colWidth = calcColWidth();
         // add rtl support
         let out;
-        if (t.renderRtl) {
+        if (renderRtl.value) {
           out = {
-            right: Math.round(colWidth * x + (x + 1) * t.margin[0]),
-            top: Math.round(t.rowHeight * y + (y + 1) * t.margin[1]),
+            right: Math.round(colWidth * x + (x + 1) * margin.value[0]),
+            top: Math.round(rowHeight.value * y + (y + 1) * margin.value[1]),
             // 0 * Infinity === NaN, which causes problems with resize constriants;
             // Fix t if it occurs.
             // Note we do it here rather than later because Math.round(Infinity) causes deopt
             width:
               w === Infinity
                 ? w
-                : Math.round(colWidth * w + Math.max(0, w - 1) * t.margin[0]),
+                : Math.round(
+                    colWidth * w + Math.max(0, w - 1) * margin.value[0],
+                  ),
             height:
               h === Infinity
                 ? h
                 : Math.round(
-                    t.rowHeight * h + Math.max(0, h - 1) * t.margin[1],
+                    rowHeight.value * h + Math.max(0, h - 1) * margin.value[1],
                   ),
           };
         } else {
           out = {
-            left: Math.round(colWidth * x + (x + 1) * t.margin[0]),
-            top: Math.round(t.rowHeight * y + (y + 1) * t.margin[1]),
+            left: Math.round(colWidth * x + (x + 1) * margin.value[0]),
+            top: Math.round(rowHeight.value * y + (y + 1) * margin.value[1]),
             // 0 * Infinity === NaN, which causes problems with resize constriants;
             // Fix this if it occurs.
             // Note we do it here rather than later because Math.round(Infinity) causes deopt
             width:
               w === Infinity
                 ? w
-                : Math.round(colWidth * w + Math.max(0, w - 1) * t.margin[0]),
+                : Math.round(
+                    colWidth * w + Math.max(0, w - 1) * margin.value[0],
+                  ),
             height:
               h === Infinity
                 ? h
                 : Math.round(
-                    t.rowHeight * h + Math.max(0, h - 1) * t.margin[1],
+                    rowHeight.value * h + Math.max(0, h - 1) * margin.value[1],
                   ),
           };
         }
 
         return out;
-      },
+      }
       /**
        * Translate x and y coordinates from pixels to grid units.
        * @param  {Number} top  Top position (relative to parent) in pixels.
@@ -652,114 +755,95 @@
        * @return {Object} x and y in grid units.
        */
       // TODO check if this function needs change in order to support rtl.
-      calcXY(top, left) {
-        const t = this;
-        const colWidth = t.calcColWidth();
-
-        // left = colWidth * x + margin * (x + 1)
-        // l = cx + m(x+1)
-        // l = cx + mx + m
-        // l - m = cx + mx
-        // l - m = x(c + m)
-        // (l - m) / (c + m) = x
-        // x = (left - margin) / (coldWidth + margin)
-        let x = Math.round((left - t.margin[0]) / (colWidth + t.margin[0]));
-        let y = Math.round((top - t.margin[1]) / (t.rowHeight + t.margin[1]));
+      function calcXY(top, left) {
+        const colWidth = calcColWidth();
+        let x = Math.round(
+          (left - margin.value[0]) / (colWidth + margin.value[0]),
+        );
+        let y = Math.round(
+          (top - margin.value[1]) / (rowHeight.value + margin.value[1]),
+        );
 
         // Capping
-        x = Math.max(Math.min(x, t.cols - t.innerW), 0);
-        y = Math.max(Math.min(y, t.maxRows - t.innerH), 0);
+        x = Math.max(Math.min(x, cols.value - innerW.value), 0);
+        y = Math.max(Math.min(y, maxRows.value - innerH.value), 0);
 
         return { x, y };
-      },
-      // Helper for generating column width
-      calcColWidth() {
-        const t = this;
+      }
+      function calcColWidth() {
         const colWidth =
-          (t.containerWidth - t.margin[0] * (t.cols + 1)) / t.cols;
-        // console.log("### COLS=" + this.cols + " COL WIDTH=" + colWidth + " MARGIN " + this.margin[0]);
+          (containerWidth.value - margin.value[0] * (cols.value + 1)) /
+          cols.value;
         return colWidth;
-      },
-
+      }
       /**
        * Given a height and width in pixel values, calculate grid units.
        * @param  {Number} height Height in pixels.
        * @param  {Number} width  Width in pixels.
        * @return {Object} w, h as grid units.
        */
-      calcWH(height, width) {
-        const t = this;
-        const colWidth = t.calcColWidth();
-
-        // width = colWidth * w - (margin * (w - 1))
-        // ...
-        // w = (width + margin) / (colWidth + margin)
-        let w = Math.round((width + t.margin[0]) / (colWidth + t.margin[0]));
+      function calcWH(height, width) {
+        const colWidth = calcColWidth();
+        let w = Math.round(
+          (width + margin.value[0]) / (colWidth + margin.value[0]),
+        );
         let h = Math.round(
-          (height + t.margin[1]) / (t.rowHeight + t.margin[1]),
+          (height + margin.value[1]) / (rowHeight.value + margin.value[1]),
         );
 
         // Capping
-        w = Math.max(Math.min(w, t.cols - t.innerX), 0);
-        h = Math.max(Math.min(h, t.maxRows - t.innerY), 0);
+        w = Math.max(Math.min(w, cols.value - innerX.value), 0);
+        h = Math.max(Math.min(h, maxRows.value - innerY.value), 0);
         return { w, h };
-      },
-      updateWidth(width, colNum) {
-        const t = this;
-        t.containerWidth = width;
+      }
+      function updateWidth(width, colNum) {
+        containerWidth.value = width;
         if (colNum !== undefined && colNum !== null) {
-          t.cols = colNum;
+          cols.value = colNum;
         }
-      },
-      compact() {
-        this.createStyle();
-      },
-      tryMakeDraggable() {
-        const t = this;
-        if (t.interactObj === null || t.interactObj === undefined) {
-          t.interactObj = interact(t.$refs.gridItem);
+      }
+      function compact() {
+        createStyle();
+      }
+      function tryMakeDraggable() {
+        if (interactObj === null || interactObj === undefined) {
+          interactObj = interact(gridItem.value);
         }
-        if (t.draggable && !t.static) {
+        if (draggable.value && !props.static) {
           const opts = {
-            ignoreFrom: t.dragIgnoreFrom,
-            allowFrom: t.dragAllowFrom,
+            ignoreFrom: props.dragIgnoreFrom,
+            allowFrom: props.dragAllowFrom,
           };
-          t.interactObj.draggable(opts);
-          /*t.interactObj.draggable({allowFrom: '.vue-draggable-handle'});*/
-          if (!t.dragEventSet) {
-            t.dragEventSet = true;
-            t.interactObj.on('dragstart dragmove dragend', (event) => {
-              t.handleDrag(event);
+          interactObj.draggable(opts);
+          if (!dragEventSet.value) {
+            dragEventSet.value = true;
+            interactObj.on('dragstart dragmove dragend', (event) => {
+              handleDrag(event);
             });
           }
         } else {
-          t.interactObj.draggable({
+          interactObj.draggable({
             enabled: false,
           });
         }
-      },
-      tryMakeResizable() {
-        const t = this;
-        if (t.interactObj === null || t.interactObj === undefined) {
-          t.interactObj = interact(t.$refs.gridItem);
+      }
+      function tryMakeResizable() {
+        if (interactObj === null || interactObj === undefined) {
+          interactObj = interact(gridItem.value);
         }
-        if (t.resizable && !t.static) {
-          let maximum = t.calcPosition(0, 0, t.maxW, t.maxH);
-          let minimum = t.calcPosition(0, 0, t.minW, t.minH);
-
-          // console.log("### MAX " + JSON.stringify(maximum));
-          // console.log("### MIN " + JSON.stringify(minimum));
+        if (resizable.value && !props.static) {
+          let maximum = calcPosition(0, 0, props.maxW, props.maxH);
+          let minimum = calcPosition(0, 0, props.minW, props.minH);
 
           const opts = {
             preserveAspectRatio: true,
-            // allowFrom: "." + t.resizableHandleClass,
             edges: {
               left: false,
-              right: '.' + t.resizableHandleClass,
-              bottom: '.' + t.resizableHandleClass,
+              right: '.' + resizableHandleClass.value,
+              bottom: '.' + resizableHandleClass.value,
               top: false,
             },
-            ignoreFrom: t.resizeIgnoreFrom,
+            ignoreFrom: props.resizeIgnoreFrom,
             restrictSize: {
               min: {
                 height: minimum.height,
@@ -771,39 +855,37 @@
               },
             },
           };
-
-          t.interactObj.resizable(opts);
-          if (!t.resizeEventSet) {
-            t.resizeEventSet = true;
-            t.interactObj.on('resizestart resizemove resizeend', (event) => {
-              t.handleResize(event);
+          interactObj.resizable(opts);
+          if (!resizeEventSet.value) {
+            resizeEventSet.value = true;
+            interactObj.on('resizestart resizemove resizeend', (event) => {
+              handleResize(event);
             });
           }
         } else {
-          t.interactObj.resizable({
+          interactObj.resizable({
             enabled: false,
           });
         }
-      },
-      autoSize() {
-        const t = this;
+      }
+      function autoSize() {
         // ok here we want to calculate if a resize is needed
-        t.previousW = t.innerW;
-        t.previousH = t.innerH;
+        previousW.value = innerW.value;
+        previousH.value = innerH.value;
 
-        let newSize = t.$slots.default[0].elm.getBoundingClientRect();
-        let pos = t.calcWH(newSize.height, newSize.width);
-        if (pos.w < t.minW) {
-          pos.w = t.minW;
+        let newSize = root.ctx.$slots.default[0].elm.getBoundingClientRect();
+        let pos = calcWH(newSize.height, newSize.width);
+        if (pos.w < props.minW) {
+          pos.w = props.minW;
         }
-        if (pos.w > t.maxW) {
-          pos.w = t.maxW;
+        if (pos.w > props.maxW) {
+          pos.w = props.maxW;
         }
-        if (pos.h < t.minH) {
-          pos.h = t.minH;
+        if (pos.h < props.minH) {
+          pos.h = props.minH;
         }
-        if (pos.h > t.maxH) {
-          pos.h = t.maxH;
+        if (pos.h > props.maxH) {
+          pos.h = props.maxH;
         }
 
         if (pos.h < 1) {
@@ -813,27 +895,33 @@
           pos.w = 1;
         }
 
-        // t.lastW = x; // basically, t is copied from resizehandler, but shouldn't be needed
-        // t.lastH = y;
-
-        if (t.innerW !== pos.w || t.innerH !== pos.h) {
-          t.$emit('resize', t.i, pos.h, pos.w, newSize.height, newSize.width);
+        if (innerW.value !== pos.w || innerH.value !== pos.h) {
+          emit('resize', props.i, pos.h, pos.w, newSize.height, newSize.width);
         }
-        if (t.previousW !== pos.w || t.previousH !== pos.h) {
-          t.$emit('resized', t.i, pos.h, pos.w, newSize.height, newSize.width);
-          t.eventBus.$emit(
+        if (previousW.value !== pos.w || previousH.value !== pos.h) {
+          emit('resized', props.i, pos.h, pos.w, newSize.height, newSize.width);
+          eventBus.emit(
             'resizeEvent',
             'resizeend',
-            t.i,
-            t.innerX,
-            t.innerY,
+            props.i,
+            innerX.value,
+            innerY.value,
             pos.h,
             pos.w,
           );
         }
-      },
+      }
+      return {
+        gridItem,
+        activeTab,
+        contentTab,
+        style,
+        resizableAndNotStatic,
+        resizableHandleClass,
+        classObj,
+      };
     },
-  };
+  });
 </script>
 <style>
   .vue-grid-item {
@@ -910,4 +998,32 @@
   .vue-grid-item.disable-userselect {
     user-select: none;
   }
+  .flex {
+    display: flex;
+  }
+  .container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  .content {
+    flex: 1;
+  }
+  .tabs {
+    background-color: #424242;
+    color: #ffffff;
+  }
+  .tab {
+    padding: 0.2rem;
+    flex: 1;
+    background-color: #424242;
+    border: solid 1px #ccc;
+    border-top-left-radius: 0.3rem;
+    border-top-right-radius: 0.3rem;
+  }
+  .tab.active {
+    background-color: #ccc;
+    color: #000;
+  }
+  /* @media */
 </style>
