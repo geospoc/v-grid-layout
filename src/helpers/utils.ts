@@ -1,4 +1,4 @@
-import { provide, inject } from '@vue/composition-api';
+import { provide, inject } from 'vue';
 // @flow
 export type LayoutItemRequired = {
   w: number;

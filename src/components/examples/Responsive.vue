@@ -33,7 +33,7 @@
   // import Tab2 from '@/components/tabs/Tab2';
   // import Tab4 from '@/components/tabs/Tab4';
   import layoutObj from '@/helpers/layout';
-  import { defineComponent, ref } from '@vue/composition-api';
+  import { defineComponent, ref, shallowRef } from 'vue';
   export default defineComponent({
     name: 'Responsive',
     components: {
@@ -43,7 +43,7 @@
       Tab4: layoutObj.Tab4,
     },
     setup(props) {
-      const layout = ref([
+      const layout = shallowRef([
         {
           x: 0,
           y: 0,

@@ -33,18 +33,20 @@
   import {
     computed,
     defineComponent,
+    getCurrentInstance,
     onBeforeUnmount,
     onMounted,
     reactive,
     ref,
     watch,
-  } from '@vue/composition-api';
+  } from 'vue';
   import {
     setTopLeft,
     setTopRight,
     setTransformRtl,
     setTransform,
     useEventBus,
+    provideEventBus,
   } from '../helpers/utils';
   import {
     getControlPosition,
@@ -54,6 +56,7 @@
   //    var eventBus = require('./eventBus');
   import interact from 'interactjs';
   //  interact = require('interactjs');
+
   export default defineComponent({
     name: 'GridItem',
     props: {
@@ -160,7 +163,9 @@
         default: () => [{ title: 'Tab1' }, { title: 'Tab2' }],
       },
     },
-    setup(props, { root, parent, emit }: any) {
+    setup(props, { emit }) {
+      const root = getCurrentInstance();
+      const parent = root.parent.ctx;
       const cols = ref(1);
       const containerWidth = ref(100);
       const rowHeight = ref(30);
@@ -389,26 +394,26 @@
       const setColNum = (colNum) => {
         cols.value = parseInt(colNum);
       };
-      eventBus.$on('updateWidth', updateWidthHandler);
-      eventBus.$on('compact', compactHandler);
-      eventBus.$on('setDraggable', setDraggableHandler);
-      eventBus.$on('setResizable', setResizableHandler);
-      eventBus.$on('setRowHeight', setRowHeightHandler);
-      eventBus.$on('setMaxRows', setMaxRowsHandler);
-      eventBus.$on('directionchange', directionchangeHandler);
-      eventBus.$on('setColNum', setColNum);
+      eventBus.on('updateWidth', updateWidthHandler);
+      eventBus.on('compact', compactHandler);
+      eventBus.on('setDraggable', setDraggableHandler);
+      eventBus.on('setResizable', setResizableHandler);
+      eventBus.on('setRowHeight', setRowHeightHandler);
+      eventBus.on('setMaxRows', setMaxRowsHandler);
+      eventBus.on('directionchange', directionchangeHandler);
+      eventBus.on('setColNum', setColNum);
       rtl.value = getDocumentDir() === 'rtl';
       // before unmount
       onBeforeUnmount(() => {
         //Remove listeners
-        eventBus.$off('updateWidth', updateWidthHandler);
-        eventBus.$off('compact', compactHandler);
-        eventBus.$off('setDraggable', setDraggableHandler);
-        eventBus.$off('setResizable', setResizableHandler);
-        eventBus.$off('setRowHeight', setRowHeightHandler);
-        eventBus.$off('setMaxRows', setMaxRowsHandler);
-        eventBus.$off('directionchange', directionchangeHandler);
-        eventBus.$off('setColNum', setColNum);
+        eventBus.off('updateWidth', updateWidthHandler);
+        eventBus.off('compact', compactHandler);
+        eventBus.off('setDraggable', setDraggableHandler);
+        eventBus.off('setResizable', setResizableHandler);
+        eventBus.off('setRowHeight', setRowHeightHandler);
+        eventBus.off('setMaxRows', setMaxRowsHandler);
+        eventBus.off('directionchange', directionchangeHandler);
+        eventBus.off('setColNum', setColNum);
         if (interactObj) {
           interactObj.unset(); // destroy interact intance
         }
@@ -432,6 +437,7 @@
         }
         useCssTransforms.value = parent.useCssTransforms;
         createStyle();
+        // provideEventBus(eventBus);
       });
       function createStyle() {
         if (props.x + props.w > cols.value) {
@@ -590,15 +596,14 @@
         ) {
           emit('resized', props.i, pos.h, pos.w, newSize.height, newSize.width);
         }
-        eventBus.$emit(
-          'resizeEvent',
-          event.type,
-          props.i,
-          innerX.value,
-          innerY.value,
-          pos.h,
-          pos.w,
-        );
+        eventBus.emit('resizeEvent', {
+          eventType: event.type,
+          i: props.i,
+          x: innerX.value,
+          y: innerY.value,
+          h: pos.h,
+          w: pos.w,
+        });
       }
       function handleDrag(event) {
         if (props.static) return;
@@ -677,15 +682,23 @@
         ) {
           emit('moved', props.i, pos.x, pos.y);
         }
-        eventBus.$emit(
-          'dragEvent',
-          event.type,
-          props.i,
-          pos.x,
-          pos.y,
-          innerH.value,
-          innerW.value,
-        );
+        eventBus.emit('dragEvent', {
+          eventType: event.type,
+          i: props.i,
+          x: pos.x,
+          y: pos.y,
+          h: innerH.value,
+          w: innerW.value,
+        });
+        // eventBus.emit(
+        //   'dragEvent',
+        //   event.type,
+        //   props.i,
+        //   pos.x,
+        //   pos.y,
+        //   innerH.value,
+        //   innerW.value,
+        // );
       }
       function calcPosition(x, y, w, h) {
         const colWidth = calcColWidth();
@@ -842,7 +855,6 @@
               },
             },
           };
-
           interactObj.resizable(opts);
           if (!resizeEventSet.value) {
             resizeEventSet.value = true;
@@ -861,7 +873,7 @@
         previousW.value = innerW.value;
         previousH.value = innerH.value;
 
-        let newSize = root.$slots.default[0].elm.getBoundingClientRect();
+        let newSize = root.ctx.$slots.default[0].elm.getBoundingClientRect();
         let pos = calcWH(newSize.height, newSize.width);
         if (pos.w < props.minW) {
           pos.w = props.minW;
@@ -888,7 +900,7 @@
         }
         if (previousW.value !== pos.w || previousH.value !== pos.h) {
           emit('resized', props.i, pos.h, pos.w, newSize.height, newSize.width);
-          eventBus.$emit(
+          eventBus.emit(
             'resizeEvent',
             'resizeend',
             props.i,
