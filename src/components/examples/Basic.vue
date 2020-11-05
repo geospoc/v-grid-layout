@@ -29,8 +29,6 @@
 <script>
   import GridLayout from '@/components/GridLayout';
   import GridItem from '@/components/GridItem';
-  import Tab2 from '@/components/tabs/Tab2';
-  import Tab4 from '@/components/tabs/Tab4';
   import { defineComponent, ref } from '@vue/composition-api';
   export default defineComponent({
     name: 'Basic',
@@ -46,10 +44,6 @@
           w: 2,
           h: 2,
           i: '0',
-          tabs: [
-            { title: 'Tab2', component: Tab2 },
-            { title: 'Tab4', component: Tab4 },
-          ],
         },
         { x: 2, y: 0, w: 2, h: 4, i: '1' },
         { x: 4, y: 0, w: 2, h: 5, i: '2' },

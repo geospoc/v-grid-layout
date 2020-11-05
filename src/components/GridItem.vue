@@ -1,24 +1,12 @@
 <template>
   <div ref="gridItem" class="vue-grid-item" :class="classObj" :style="style">
     <div class="container">
-      <div class="tabs flex">
-        <div
-          v-for="(tab, tabIdx) in tabs"
-          :key="tabIdx"
-          class="tab flex"
-          :class="activeTab === tabIdx ? 'active' : ''"
-          @click="activeTab = tabIdx"
-        >
-          {{ tab.title }}
-        </div>
-      </div>
       <div
         v-for="(tab, tabIdx) in contentTab"
         :key="tabIdx"
         class="content flex"
       >
-        <!-- {{ tab }} -->
-        <component :is="tab.component"></component>
+        <!-- content can go here -->
       </div>
     </div>
     <span
