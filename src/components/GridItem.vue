@@ -1,11 +1,7 @@
 <template>
   <div ref="gridItem" class="vue-grid-item" :class="classObj" :style="style">
     <div class="container">
-      <div
-        v-for="(tab, tabIdx) in contentTab"
-        :key="tabIdx"
-        class="content flex"
-      >
+      <div class="content flex">
         <!-- content can go here -->
       </div>
     </div>
