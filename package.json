@@ -52,7 +52,7 @@
     "babel-preset-vue": "^2.0.2",
     "eslint-config-vue": "^2.0.2",
     "eslint-plugin-prettier": "^3.1.4",
-    "eslint-plugin-vue": "^6.2.2",
+    "eslint-plugin-vue": "^7.1.0",
     "husky": "^4.3.0",
     "jsdom": "^16.4.0",
     "jsdom-global": "^3.0.2",
