@@ -1,0 +1,27 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "swaprenge",
+      "name": "swaprenge",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/60922859?v=4",
+      "profile": "https://github.com/swaprenge",
+      "contributions": [
+        "example",
+        "test",
+        "doc",
+        "code"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "v-grid-layout",
+  "projectOwner": "geospoc",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "skipCi": true
+}
