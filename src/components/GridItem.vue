@@ -1,10 +1,6 @@
 <template>
   <div ref="gridItem" class="vue-grid-item" :class="classObj" :style="style">
-    <div class="container">
-      <div class="content flex">
-        <!-- content can go here -->
-      </div>
-    </div>
+    <slot></slot>
     <span
       v-if="resizableAndNotStatic"
       ref="handle"
