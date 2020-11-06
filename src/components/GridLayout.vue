@@ -316,7 +316,7 @@
           }
 
           compact(props.layout, props.verticalCompact);
-          eventBus.$emit('updateWidth', width.value);
+          eventBus.$emit('update-width', width.value);
           updateHeight();
 
           emit('layout-updated', props.layout);
@@ -357,7 +357,7 @@
           root.$nextTick(() => {
             isDragging.value = true;
           });
-          eventBus.$emit('updateWidth', width.value);
+          eventBus.$emit('update-width', width.value);
         } else {
           root.$nextTick(() => {
             isDragging.value = false;
@@ -427,7 +427,7 @@
           root.$nextTick(() => {
             isDragging.value = true;
           });
-          eventBus.$emit('updateWidth', width.value);
+          eventBus.$emit('update-width', width.value);
         } else {
           root.$nextTick(() => {
             isDragging.value = false;

@@ -373,7 +373,7 @@
       const setColNum = (colNum) => {
         cols.value = parseInt(colNum);
       };
-      eventBus.$on('updateWidth', updateWidthHandler);
+      eventBus.$on('update-width', updateWidthHandler);
       eventBus.$on('compact', compactHandler);
       eventBus.$on('setDraggable', setDraggableHandler);
       eventBus.$on('setResizable', setResizableHandler);
@@ -385,7 +385,7 @@
       // before unmount
       onBeforeUnmount(() => {
         //Remove listeners
-        eventBus.$off('updateWidth', updateWidthHandler);
+        eventBus.$off('update-width', updateWidthHandler);
         eventBus.$off('compact', compactHandler);
         eventBus.$off('setDraggable', setDraggableHandler);
         eventBus.$off('setResizable', setResizableHandler);

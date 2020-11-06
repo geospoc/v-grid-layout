@@ -109,7 +109,7 @@
       width: function () {
         this.$nextTick(function () {
           //this.$broadcast("updateWidth", this.width);
-          this.eventBus.$emit('updateWidth', this.width);
+          this.eventBus.$emit('update-width', this.width);
           this.updateHeight();
         });
       },
@@ -206,7 +206,7 @@
             this.lastLayoutLength = this.layout.length;
           }
           compact(this.layout, this.verticalCompact);
-          this.eventBus.$emit('updateWidth', this.width);
+          this.eventBus.$emit('update-width', this.width);
           this.updateHeight();
         }
       },
@@ -243,7 +243,7 @@
             this.isDragging = true;
           });
           //this.$broadcast("updateWidth", this.width);
-          this.eventBus.$emit('updateWidth', this.width);
+          this.eventBus.$emit('update-width', this.width);
         } else {
           this.$nextTick(function () {
             this.isDragging = false;
@@ -276,7 +276,7 @@
             this.isDragging = true;
           });
           //this.$broadcast("updateWidth", this.width);
-          this.eventBus.$emit('updateWidth', this.width);
+          this.eventBus.$emit('update-width', this.width);
         } else {
           this.$nextTick(function () {
             this.isDragging = false;
