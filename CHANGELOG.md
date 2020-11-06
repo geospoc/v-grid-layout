@@ -1,3 +1,17 @@
+## [1.0.1](https://github.com/geospoc/v-grid-layout/compare/v1.0.0...v1.0.1) (2020-11-06)
+
+
+### Bug Fixes
+
+* remove custom css for tabs ([a703fb5](https://github.com/geospoc/v-grid-layout/commit/a703fb532edde65f55bff09056da948e1785e416))
+
+
+### Reverts
+
+* add slot ([e5c213b](https://github.com/geospoc/v-grid-layout/commit/e5c213bfa8c41ac508f4ed6559fc25b7af46d9dd))
+
+
+
 # [1.0.0](https://github.com/geospoc/v-grid-layout/compare/v0.1.0...v1.0.0) (2020-11-06)
 
 
