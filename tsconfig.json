@@ -1,12 +1,14 @@
 {
   "compilerOptions": {
     "target": "esnext",
-    "module": "commonjs",
+    "module": "esnext",
     "moduleResolution": "node",
     "lib": [
       "esnext",
+      "dom",
+      "dom.iterable",
+      "scripthost",
       "esnext.asynciterable",
-      "dom"
     ],
     "esModuleInterop": true,
     "allowJs": true,
@@ -20,6 +22,9 @@
       "@/*": ["./src/*"]
     }
   },
+  "files": [
+    "types/vue-shim.d.ts",
+  ],
   "include": [
     "src"
   ],

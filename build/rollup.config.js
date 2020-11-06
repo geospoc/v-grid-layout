@@ -1,6 +1,25 @@
 import babel from '@rollup/plugin-babel';
 import commonjs from '@rollup/plugin-commonjs';
+import alias from '@rollup/plugin-alias';
+import resolve from '@rollup/plugin-node-resolve';
 import vue from 'rollup-plugin-vue';
+import typescript from 'rollup-plugin-typescript2';
+
+const extensions = ['.js', '.ts', '.vue'];
+const plugins = [
+  alias(),
+  resolve({ extensions, browser: true }),
+  babel({
+    babelHelpers: 'bundled',
+    exclude: 'node_modules/**',
+  }),
+  commonjs(),
+  vue(),
+  typescript({
+    include: [/\.tsx?$/, /\.vue\?.*?lang=ts/],
+    useTsconfigDeclarationDir: true,
+  }),
+];
 
 export default [
   // ESM build to be used with webpack/rollup.
@@ -11,14 +30,7 @@ export default [
       name: 'v-grid-layout',
       file: 'dist/v-grid-layout.esm.js',
     },
-    plugins: [
-      babel({
-        babelHelpers: 'bundled',
-        exclude: 'node_modules/**',
-      }),
-      commonjs(),
-      vue(),
-    ],
+    plugins,
     external: ['@vue/composition-api', 'vue'],
   },
   // CommonJS build
@@ -26,17 +38,11 @@ export default [
     input: 'src/index.js',
     output: {
       format: 'cjs',
+      exports: 'named',
       name: 'v-grid-layout',
       file: 'dist/v-grid-layout.cjs.js',
     },
-    plugins: [
-      babel({
-        babelHelpers: 'bundled',
-        exclude: 'node_modules/**',
-      }),
-      commonjs(),
-      vue(),
-    ],
+    plugins,
     external: ['@vue/composition-api', 'vue'],
   },
   // UMD build.
@@ -44,6 +50,7 @@ export default [
     input: 'src/index.js',
     output: {
       format: 'umd',
+      exports: 'named',
       name: 'v-grid-layout',
       file: 'dist/v-grid-layout.umd.js',
       globals: {
@@ -51,14 +58,7 @@ export default [
         vue: 'vue',
       },
     },
-    plugins: [
-      babel({
-        babelHelpers: 'bundled',
-        exclude: 'node_modules/**',
-      }),
-      commonjs(),
-      vue(),
-    ],
+    plugins,
     external: ['@vue/composition-api', 'vue'],
   },
 ];

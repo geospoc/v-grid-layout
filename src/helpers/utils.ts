@@ -14,8 +14,8 @@ export type LayoutItem = LayoutItemRequired & {
   maxH?: number;
   moved?: boolean;
   static?: boolean;
-  isDraggable?: ?boolean;
-  isResizable?: ?boolean;
+  isDraggable?: boolean;
+  isResizable?: boolean;
 };
 export type Layout = Array<LayoutItem>;
 // export type Position = {left: number, top: number, width: number, height: number};
@@ -91,7 +91,7 @@ export function collides(l1: LayoutItem, l2: LayoutItem): boolean {
  *   vertically.
  * @return {Array}       Compacted Layout.
  */
-export function compact(layout: Layout, verticalCompact: Boolean): Layout {
+export function compact(layout: Layout, verticalCompact: boolean): Layout {
   // Statics go in the compareWith array right away so items flow around them.
   const compareWith = getStatics(layout);
   // We go through the items by row and column.
@@ -183,7 +183,10 @@ export function correctBounds(
  * @param  {String} id     ID
  * @return {LayoutItem}    Item at ID.
  */
-export function getLayoutItem(layout: Layout, id: string): ?LayoutItem {
+export function getLayoutItem(
+  layout: Layout,
+  id: string,
+): LayoutItem | undefined {
   for (let i = 0, len = layout.length; i < len; i++) {
     if (layout[i].i === id) return layout[i];
   }
@@ -200,7 +203,7 @@ export function getLayoutItem(layout: Layout, id: string): ?LayoutItem {
 export function getFirstCollision(
   layout: Layout,
   layoutItem: LayoutItem,
-): ?LayoutItem {
+): LayoutItem | undefined {
   for (let i = 0, len = layout.length; i < len; i++) {
     if (collides(layout[i], layoutItem)) return layout[i];
   }
@@ -236,10 +239,10 @@ export function getStatics(layout: Layout): Array<LayoutItem> {
 export function moveElement(
   layout: Layout,
   l: LayoutItem,
-  x: Number,
-  y: Number,
-  isUserAction: Boolean,
-  preventCollision: Boolean,
+  x: number | undefined,
+  y: number,
+  isUserAction: boolean,
+  preventCollision: boolean,
 ): Layout {
   if (l.static) return layout;
 
@@ -306,7 +309,7 @@ export function moveElementAwayFromCollision(
   layout: Layout,
   collidesWith: LayoutItem,
   itemToMove: LayoutItem,
-  isUserAction: ?boolean,
+  isUserAction: boolean,
 ): Layout {
   const preventCollision = false; // we're already colliding
   // If there is enough space above the collision to put this element, move it there.
@@ -328,6 +331,7 @@ export function moveElementAwayFromCollision(
         itemToMove,
         undefined,
         fakeItem.y,
+        isUserAction,
         preventCollision,
       );
     }
@@ -340,6 +344,7 @@ export function moveElementAwayFromCollision(
     itemToMove,
     undefined,
     itemToMove.y + 1,
+    isUserAction,
     preventCollision,
   );
 }
@@ -424,10 +429,10 @@ export function setTopRight(top, right, width, height): Object {
  * Get layout items sorted from top left to right and down.
  *
  * @return {Array} Array of layout objects.
- * @return {Array}        Layout, sorted static items first.
+ * @return {Array} Layout, sorted static items first.
  */
-export function sortLayoutItemsByRowCol(layout: Layout): Layout {
-  return [].concat(layout).sort(function (a, b) {
+export function sortLayoutItemsByRowCol(layout: Layout | any): Layout {
+  return [].concat(layout).sort((a: any, b: any) => {
     if (a.y === b.y && a.x === b.x) {
       return 0;
     }
