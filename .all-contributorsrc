@@ -1,0 +1,29 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "vinayakkulkarni",
+      "name": "Vinayak Kulkarni",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/19776877?v=4",
+      "profile": "https://vinayakkulkarni.dev",
+      "contributions": [
+        "test",
+        "doc",
+        "maintenance",
+        "infra",
+        "review",
+        "code"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "v-grid-layout",
+  "projectOwner": "geospoc",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "skipCi": true
+}
