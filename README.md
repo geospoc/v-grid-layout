@@ -1,4 +1,7 @@
 # v-grid-layout ⺲ 
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 [![GitHub Workflow Status](https://github.com/geospoc/v-grid-layout/workflows/ci/badge.svg)](https://github.com/geospoc/v-grid-layout/actions?query=workflow%3Aci)
 
@@ -618,3 +621,22 @@ Working example [here](https://jbaysolutions.github.io/vue-grid-layout/examples/
 _Note_: Commits & PRs will be allowed only if the commit messages & PR titles follow a particular standard format, read more about it [here](https://github.com/conventional-changelog/commitlint/tree/master/%40commitlint/config-conventional#type-enum)
 
 Please contribute using [Github Flow](https://guides.github.com/introduction/flow/). Create a new branch from the default branch, add commits, and [open a pull request](https://github.com/geospoc/v-grid-layout/compare)
+
+## Contributors ✨
+
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/swaprenge"><img src="https://avatars0.githubusercontent.com/u/60922859?v=4" width="100px;" alt=""/><br /><sub><b>swaprenge</b></sub></a><br /><a href="#example-swaprenge" title="Examples">💡</a> <a href="https://github.com/geospoc/v-grid-layout/commits?author=swaprenge" title="Tests">⚠️</a> <a href="https://github.com/geospoc/v-grid-layout/commits?author=swaprenge" title="Documentation">📖</a> <a href="https://github.com/geospoc/v-grid-layout/commits?author=swaprenge" title="Code">💻</a></td>
+  </tr>
+</table>
+
+<!-- markdownlint-enable -->
+<!-- prettier-ignore-end -->
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
