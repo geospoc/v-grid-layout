@@ -152,7 +152,7 @@
         () => width.value,
         (width, oldWidth) => {
           root.$nextTick(() => {
-            eventBus.$emit('updateWidth', width);
+            eventBus.$emit('update-width', width);
             if (oldWidth === null) {
               /*
               If oldval == null is when the width has never been
@@ -193,28 +193,28 @@
       watch(
         () => props.colNum,
         (colNum, oldColNum) => {
-          eventBus.$emit('setColNum', colNum);
+          eventBus.$emit('set-col-num', colNum);
         },
       );
       // rowHeight
       watch(
         () => props.rowHeight,
         (rowHeight, oldrowHeight) => {
-          eventBus.$emit('setRowHeight', rowHeight);
+          eventBus.$emit('set-row-height', rowHeight);
         },
       );
       // isDraggable
       watch(
         () => props.isDraggable,
         (isDraggable, oldIsDraggable) => {
-          eventBus.$emit('setDraggable', isDraggable);
+          eventBus.$emit('set-draggable', isDraggable);
         },
       );
       // isResizable
       watch(
         () => props.isResizable,
         (isResizable, oldIsResizable) => {
-          eventBus.$emit('setResizable', isResizable);
+          eventBus.$emit('set-resizable', isResizable);
         },
       );
       // responsive
@@ -223,7 +223,7 @@
         (responsive, oldResponsive) => {
           if (!responsive) {
             emit('update:layout', originalLayout);
-            eventBus.$emit('setColNum', props.colNum);
+            eventBus.$emit('set-col-num', props.colNum);
           }
           onWindowResize();
         },
@@ -232,7 +232,7 @@
       watch(
         () => props.maxRows,
         (maxRows, oldMaxRows) => {
-          eventBus.$emit('setMaxRows', maxRows);
+          eventBus.$emit('set-max-rows', maxRows);
         },
       );
       // margin
@@ -249,8 +249,8 @@
       const dragEventHandler = (eventType, i, x, y, h, w) => {
         dragEvent(eventType, i, x, y, h, w);
       };
-      eventBus.$on('resizeEvent', resizeEventHandler);
-      eventBus.$on('dragEvent', dragEventHandler);
+      eventBus.$on('resize-event', resizeEventHandler);
+      eventBus.$on('drag-event', dragEventHandler);
       emit('layout-created', props.layout);
 
       onBeforeMount(() => {
@@ -286,8 +286,8 @@
       });
       onBeforeUnmount(() => {
         //Remove listeners
-        eventBus.$off('resizeEvent', resizeEventHandler);
-        eventBus.$off('dragEvent', dragEventHandler);
+        eventBus.$off('resize-event', resizeEventHandler);
+        eventBus.$off('drag-event', dragEventHandler);
         eventBus.$destroy();
         removeWindowEventListener('resize', onWindowResize);
         if (erd) {
@@ -316,7 +316,7 @@
           }
 
           compact(props.layout, props.verticalCompact);
-          eventBus.$emit('updateWidth', width.value);
+          eventBus.$emit('update-width', width.value);
           updateHeight();
 
           emit('layout-updated', props.layout);
@@ -331,7 +331,7 @@
         if (gridLayout.value !== null && gridLayout.value !== undefined) {
           width.value = gridLayout.value.offsetWidth;
         }
-        eventBus.$emit('resizeEvent');
+        eventBus.$emit('resize-event');
       }
       function containerHeight() {
         if (!props.autoSize) return;
@@ -357,7 +357,7 @@
           root.$nextTick(() => {
             isDragging.value = true;
           });
-          eventBus.$emit('updateWidth', width.value);
+          eventBus.$emit('update-width', width.value);
         } else {
           root.$nextTick(() => {
             isDragging.value = false;
@@ -365,6 +365,7 @@
         }
 
         // Move the element to the dragged location.
+        // eslint-disable-next-line vue/no-mutating-props
         props.layout = moveElement(
           props.layout,
           l,
@@ -427,7 +428,7 @@
           root.$nextTick(() => {
             isDragging.value = true;
           });
-          eventBus.$emit('updateWidth', width.value);
+          eventBus.$emit('update-width', width.value);
         } else {
           root.$nextTick(() => {
             isDragging.value = false;
@@ -476,7 +477,7 @@
 
         lastBreakpoint.value = newBreakpoint;
         eventBus.$emit(
-          'setColNum',
+          'set-col-num',
           getColsFromBreakpoint(newBreakpoint, props.cols),
         );
       }

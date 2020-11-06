@@ -373,26 +373,26 @@
       const setColNum = (colNum) => {
         cols.value = parseInt(colNum);
       };
-      eventBus.$on('updateWidth', updateWidthHandler);
+      eventBus.$on('update-width', updateWidthHandler);
       eventBus.$on('compact', compactHandler);
-      eventBus.$on('setDraggable', setDraggableHandler);
-      eventBus.$on('setResizable', setResizableHandler);
-      eventBus.$on('setRowHeight', setRowHeightHandler);
-      eventBus.$on('setMaxRows', setMaxRowsHandler);
+      eventBus.$on('set-draggable', setDraggableHandler);
+      eventBus.$on('set-resizable', setResizableHandler);
+      eventBus.$on('set-row-height', setRowHeightHandler);
+      eventBus.$on('set-max-rows', setMaxRowsHandler);
       eventBus.$on('directionchange', directionchangeHandler);
-      eventBus.$on('setColNum', setColNum);
+      eventBus.$on('set-col-num', setColNum);
       rtl.value = getDocumentDir() === 'rtl';
       // before unmount
       onBeforeUnmount(() => {
         //Remove listeners
-        eventBus.$off('updateWidth', updateWidthHandler);
+        eventBus.$off('update-width', updateWidthHandler);
         eventBus.$off('compact', compactHandler);
-        eventBus.$off('setDraggable', setDraggableHandler);
-        eventBus.$off('setResizable', setResizableHandler);
-        eventBus.$off('setRowHeight', setRowHeightHandler);
-        eventBus.$off('setMaxRows', setMaxRowsHandler);
+        eventBus.$off('set-draggable', setDraggableHandler);
+        eventBus.$off('set-resizable', setResizableHandler);
+        eventBus.$off('set-row-height', setRowHeightHandler);
+        eventBus.$off('set-max-rows', setMaxRowsHandler);
         eventBus.$off('directionchange', directionchangeHandler);
-        eventBus.$off('setColNum', setColNum);
+        eventBus.$off('set-col-num', setColNum);
         if (interactObj) {
           interactObj.unset(); // destroy interact intance
         }
@@ -575,7 +575,7 @@
           emit('resized', props.i, pos.h, pos.w, newSize.height, newSize.width);
         }
         eventBus.$emit(
-          'resizeEvent',
+          'resize-event',
           event.type,
           props.i,
           innerX.value,
@@ -662,7 +662,7 @@
           emit('moved', props.i, pos.x, pos.y);
         }
         eventBus.$emit(
-          'dragEvent',
+          'drag-event',
           event.type,
           props.i,
           pos.x,
@@ -873,7 +873,7 @@
         if (previousW.value !== pos.w || previousH.value !== pos.h) {
           emit('resized', props.i, pos.h, pos.w, newSize.height, newSize.width);
           eventBus.$emit(
-            'resizeEvent',
+            'resize-event',
             'resizeend',
             props.i,
             innerX.value,

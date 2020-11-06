@@ -33,13 +33,13 @@
 
   export default {
     name: 'GridLayout',
+    components: {
+      GridItem,
+    },
     provide() {
       return {
         eventBus: null,
       };
-    },
-    components: {
-      GridItem,
     },
     props: {
       // If true, the container height swells and contracts to fit contents
@@ -109,7 +109,7 @@
       width: function () {
         this.$nextTick(function () {
           //this.$broadcast("updateWidth", this.width);
-          this.eventBus.$emit('updateWidth', this.width);
+          this.eventBus.$emit('update-width', this.width);
           this.updateHeight();
         });
       },
@@ -117,16 +117,16 @@
         this.layoutUpdate();
       },
       colNum: function (val) {
-        this.eventBus.$emit('setColNum', val);
+        this.eventBus.$emit('set-col-num', val);
       },
       rowHeight: function () {
-        this.eventBus.$emit('setRowHeight', this.rowHeight);
+        this.eventBus.$emit('set-row-height', this.rowHeight);
       },
       isDraggable: function () {
-        this.eventBus.$emit('setDraggable', this.isDraggable);
+        this.eventBus.$emit('set-draggable', this.isDraggable);
       },
       isResizable: function () {
-        this.eventBus.$emit('setResizable', this.isResizable);
+        this.eventBus.$emit('set-resizable', this.isResizable);
       },
     },
     created() {
@@ -143,13 +143,13 @@
 
       self._provided.eventBus = new Vue();
       self.eventBus = self._provided.eventBus;
-      self.eventBus.$on('resizeEvent', self.resizeEventHandler);
-      self.eventBus.$on('dragEvent', self.dragEventHandler);
+      self.eventBus.$on('resize-event', self.resizeEventHandler);
+      self.eventBus.$on('drag-event', self.dragEventHandler);
     },
     beforeDestroy: function () {
       //Remove listeners
-      this.eventBus.$off('resizeEvent', this.resizeEventHandler);
-      this.eventBus.$off('dragEvent', this.dragEventHandler);
+      this.eventBus.$off('resize-event', this.resizeEventHandler);
+      this.eventBus.$off('drag-event', this.dragEventHandler);
       removeWindowEventListener('resize', this.onWindowResize);
     },
     mounted: function () {
@@ -206,7 +206,7 @@
             this.lastLayoutLength = this.layout.length;
           }
           compact(this.layout, this.verticalCompact);
-          this.eventBus.$emit('updateWidth', this.width);
+          this.eventBus.$emit('update-width', this.width);
           this.updateHeight();
         }
       },
@@ -243,7 +243,7 @@
             this.isDragging = true;
           });
           //this.$broadcast("updateWidth", this.width);
-          this.eventBus.$emit('updateWidth', this.width);
+          this.eventBus.$emit('update-width', this.width);
         } else {
           this.$nextTick(function () {
             this.isDragging = false;
@@ -258,6 +258,7 @@
         l.x = x;
         l.y = y;
         // Move the element to the dragged location.
+        // eslint-disable-next-line vue/no-mutating-props
         this.layout = moveElement(this.layout, l, x, y, true);
         compact(this.layout, this.verticalCompact);
         // needed because vue can't detect changes on array element properties
@@ -276,7 +277,7 @@
             this.isDragging = true;
           });
           //this.$broadcast("updateWidth", this.width);
-          this.eventBus.$emit('updateWidth', this.width);
+          this.eventBus.$emit('update-width', this.width);
         } else {
           this.$nextTick(function () {
             this.isDragging = false;
