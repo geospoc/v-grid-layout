@@ -120,13 +120,13 @@
         this.eventBus.$emit('set-col-num', val);
       },
       rowHeight: function () {
-        this.eventBus.$emit('setRowHeight', this.rowHeight);
+        this.eventBus.$emit('set-row-height', this.rowHeight);
       },
       isDraggable: function () {
-        this.eventBus.$emit('setDraggable', this.isDraggable);
+        this.eventBus.$emit('set-draggable', this.isDraggable);
       },
       isResizable: function () {
-        this.eventBus.$emit('setResizable', this.isResizable);
+        this.eventBus.$emit('set-resizable', this.isResizable);
       },
     },
     created() {

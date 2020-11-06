@@ -200,21 +200,21 @@
       watch(
         () => props.rowHeight,
         (rowHeight, oldrowHeight) => {
-          eventBus.$emit('setRowHeight', rowHeight);
+          eventBus.$emit('set-row-height', rowHeight);
         },
       );
       // isDraggable
       watch(
         () => props.isDraggable,
         (isDraggable, oldIsDraggable) => {
-          eventBus.$emit('setDraggable', isDraggable);
+          eventBus.$emit('set-draggable', isDraggable);
         },
       );
       // isResizable
       watch(
         () => props.isResizable,
         (isResizable, oldIsResizable) => {
-          eventBus.$emit('setResizable', isResizable);
+          eventBus.$emit('set-resizable', isResizable);
         },
       );
       // responsive
@@ -232,7 +232,7 @@
       watch(
         () => props.maxRows,
         (maxRows, oldMaxRows) => {
-          eventBus.$emit('setMaxRows', maxRows);
+          eventBus.$emit('set-max-rows', maxRows);
         },
       );
       // margin

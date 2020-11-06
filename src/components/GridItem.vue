@@ -375,10 +375,10 @@
       };
       eventBus.$on('update-width', updateWidthHandler);
       eventBus.$on('compact', compactHandler);
-      eventBus.$on('setDraggable', setDraggableHandler);
-      eventBus.$on('setResizable', setResizableHandler);
-      eventBus.$on('setRowHeight', setRowHeightHandler);
-      eventBus.$on('setMaxRows', setMaxRowsHandler);
+      eventBus.$on('set-draggable', setDraggableHandler);
+      eventBus.$on('set-resizable', setResizableHandler);
+      eventBus.$on('set-row-height', setRowHeightHandler);
+      eventBus.$on('set-max-rows', setMaxRowsHandler);
       eventBus.$on('directionchange', directionchangeHandler);
       eventBus.$on('set-col-num', setColNum);
       rtl.value = getDocumentDir() === 'rtl';
@@ -387,10 +387,10 @@
         //Remove listeners
         eventBus.$off('update-width', updateWidthHandler);
         eventBus.$off('compact', compactHandler);
-        eventBus.$off('setDraggable', setDraggableHandler);
-        eventBus.$off('setResizable', setResizableHandler);
-        eventBus.$off('setRowHeight', setRowHeightHandler);
-        eventBus.$off('setMaxRows', setMaxRowsHandler);
+        eventBus.$off('set-draggable', setDraggableHandler);
+        eventBus.$off('set-resizable', setResizableHandler);
+        eventBus.$off('set-row-height', setRowHeightHandler);
+        eventBus.$off('set-max-rows', setMaxRowsHandler);
         eventBus.$off('directionchange', directionchangeHandler);
         eventBus.$off('set-col-num', setColNum);
         if (interactObj) {
