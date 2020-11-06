@@ -966,32 +966,4 @@
   .vue-grid-item.disable-userselect {
     user-select: none;
   }
-  .flex {
-    display: flex;
-  }
-  .container {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-  }
-  .content {
-    flex: 1;
-  }
-  .tabs {
-    background-color: #424242;
-    color: #ffffff;
-  }
-  .tab {
-    padding: 0.2rem;
-    flex: 1;
-    background-color: #424242;
-    border: solid 1px #ccc;
-    border-top-left-radius: 0.3rem;
-    border-top-right-radius: 0.3rem;
-  }
-  .tab.active {
-    background-color: #ccc;
-    color: #000;
-  }
-  /* @media */
 </style>
