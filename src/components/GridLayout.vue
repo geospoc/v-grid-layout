@@ -331,7 +331,7 @@
         if (gridLayout.value !== null && gridLayout.value !== undefined) {
           width.value = gridLayout.value.offsetWidth;
         }
-        eventBus.$emit('resizeEvent');
+        eventBus.$emit('resize-event');
       }
       function containerHeight() {
         if (!props.autoSize) return;
@@ -476,7 +476,7 @@
 
         lastBreakpoint.value = newBreakpoint;
         eventBus.$emit(
-          'setColNum',
+          'set-col-num',
           getColsFromBreakpoint(newBreakpoint, props.cols),
         );
       }
