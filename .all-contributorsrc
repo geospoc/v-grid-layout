@@ -18,6 +18,19 @@
         "review",
         "code"
       ]
+    },
+    {
+      "login": "swaprenge",
+      "name": "swaprenge",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/60922859?v=4",
+      "profile": "https://github.com/swaprenge",
+      "contributions": [
+        "code",
+        "maintenance",
+        "example",
+        "test",
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
