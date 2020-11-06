@@ -33,13 +33,13 @@
 
   export default {
     name: 'GridLayout',
+    components: {
+      GridItem,
+    },
     provide() {
       return {
         eventBus: null,
       };
-    },
-    components: {
-      GridItem,
     },
     props: {
       // If true, the container height swells and contracts to fit contents
@@ -117,7 +117,7 @@
         this.layoutUpdate();
       },
       colNum: function (val) {
-        this.eventBus.$emit('setColNum', val);
+        this.eventBus.$emit('set-col-num', val);
       },
       rowHeight: function () {
         this.eventBus.$emit('setRowHeight', this.rowHeight);

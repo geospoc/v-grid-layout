@@ -380,7 +380,7 @@
       eventBus.$on('setRowHeight', setRowHeightHandler);
       eventBus.$on('setMaxRows', setMaxRowsHandler);
       eventBus.$on('directionchange', directionchangeHandler);
-      eventBus.$on('setColNum', setColNum);
+      eventBus.$on('set-col-num', setColNum);
       rtl.value = getDocumentDir() === 'rtl';
       // before unmount
       onBeforeUnmount(() => {
@@ -392,7 +392,7 @@
         eventBus.$off('setRowHeight', setRowHeightHandler);
         eventBus.$off('setMaxRows', setMaxRowsHandler);
         eventBus.$off('directionchange', directionchangeHandler);
-        eventBus.$off('setColNum', setColNum);
+        eventBus.$off('set-col-num', setColNum);
         if (interactObj) {
           interactObj.unset(); // destroy interact intance
         }

@@ -193,7 +193,7 @@
       watch(
         () => props.colNum,
         (colNum, oldColNum) => {
-          eventBus.$emit('setColNum', colNum);
+          eventBus.$emit('set-col-num', colNum);
         },
       );
       // rowHeight
@@ -223,7 +223,7 @@
         (responsive, oldResponsive) => {
           if (!responsive) {
             emit('update:layout', originalLayout);
-            eventBus.$emit('setColNum', props.colNum);
+            eventBus.$emit('set-col-num', props.colNum);
           }
           onWindowResize();
         },
