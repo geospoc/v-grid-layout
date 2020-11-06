@@ -152,7 +152,7 @@
         () => width.value,
         (width, oldWidth) => {
           root.$nextTick(() => {
-            eventBus.$emit('updateWidth', width);
+            eventBus.$emit('update-width', width);
             if (oldWidth === null) {
               /*
               If oldval == null is when the width has never been
@@ -249,8 +249,8 @@
       const dragEventHandler = (eventType, i, x, y, h, w) => {
         dragEvent(eventType, i, x, y, h, w);
       };
-      eventBus.$on('resizeEvent', resizeEventHandler);
-      eventBus.$on('dragEvent', dragEventHandler);
+      eventBus.$on('resize-event', resizeEventHandler);
+      eventBus.$on('drag-event', dragEventHandler);
       emit('layout-created', props.layout);
 
       onBeforeMount(() => {
@@ -286,8 +286,8 @@
       });
       onBeforeUnmount(() => {
         //Remove listeners
-        eventBus.$off('resizeEvent', resizeEventHandler);
-        eventBus.$off('dragEvent', dragEventHandler);
+        eventBus.$off('resize-event', resizeEventHandler);
+        eventBus.$off('drag-event', dragEventHandler);
         eventBus.$destroy();
         removeWindowEventListener('resize', onWindowResize);
         if (erd) {

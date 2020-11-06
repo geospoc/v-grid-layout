@@ -575,7 +575,7 @@
           emit('resized', props.i, pos.h, pos.w, newSize.height, newSize.width);
         }
         eventBus.$emit(
-          'resizeEvent',
+          'resize-event',
           event.type,
           props.i,
           innerX.value,
@@ -662,7 +662,7 @@
           emit('moved', props.i, pos.x, pos.y);
         }
         eventBus.$emit(
-          'dragEvent',
+          'drag-event',
           event.type,
           props.i,
           pos.x,
@@ -873,7 +873,7 @@
         if (previousW.value !== pos.w || previousH.value !== pos.h) {
           emit('resized', props.i, pos.h, pos.w, newSize.height, newSize.width);
           eventBus.$emit(
-            'resizeEvent',
+            'resize-event',
             'resizeend',
             props.i,
             innerX.value,

@@ -143,13 +143,13 @@
 
       self._provided.eventBus = new Vue();
       self.eventBus = self._provided.eventBus;
-      self.eventBus.$on('resizeEvent', self.resizeEventHandler);
-      self.eventBus.$on('dragEvent', self.dragEventHandler);
+      self.eventBus.$on('resize-event', self.resizeEventHandler);
+      self.eventBus.$on('drag-event', self.dragEventHandler);
     },
     beforeDestroy: function () {
       //Remove listeners
-      this.eventBus.$off('resizeEvent', this.resizeEventHandler);
-      this.eventBus.$off('dragEvent', this.dragEventHandler);
+      this.eventBus.$off('resize-event', this.resizeEventHandler);
+      this.eventBus.$off('drag-event', this.dragEventHandler);
       removeWindowEventListener('resize', this.onWindowResize);
     },
     mounted: function () {
