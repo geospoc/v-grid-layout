@@ -381,7 +381,7 @@
         if (eventName === 'dragend') emit('layout-updated', props.layout);
       }
       function resizeEvent(eventName, id, x, y, h, w) {
-        let l = getLayoutItem(props.layout, id);
+        let l: any = getLayoutItem(props.layout, id);
         //GetLayoutItem sometimes return null object
         if (l === undefined || l === null) {
           l = { x: 0, y: 0, w: 0, h: 0, i: '' };
