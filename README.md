@@ -1,6 +1,6 @@
 # v-grid-layout ⺲ 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 [![GitHub Workflow Status](https://github.com/geospoc/v-grid-layout/workflows/ci/badge.svg)](https://github.com/geospoc/v-grid-layout/actions?query=workflow%3Aci)
@@ -632,6 +632,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <table>
   <tr>
     <td align="center"><a href="https://vinayakkulkarni.dev"><img src="https://avatars2.githubusercontent.com/u/19776877?v=4" width="100px;" alt=""/><br /><sub><b>Vinayak Kulkarni</b></sub></a><br /><a href="https://github.com/geospoc/v-grid-layout/commits?author=vinayakkulkarni" title="Tests">⚠️</a> <a href="https://github.com/geospoc/v-grid-layout/commits?author=vinayakkulkarni" title="Documentation">📖</a> <a href="#maintenance-vinayakkulkarni" title="Maintenance">🚧</a> <a href="#infra-vinayakkulkarni" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/geospoc/v-grid-layout/pulls?q=is%3Apr+reviewed-by%3Avinayakkulkarni" title="Reviewed Pull Requests">👀</a> <a href="https://github.com/geospoc/v-grid-layout/commits?author=vinayakkulkarni" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/swaprenge"><img src="https://avatars0.githubusercontent.com/u/60922859?v=4" width="100px;" alt=""/><br /><sub><b>swaprenge</b></sub></a><br /><a href="https://github.com/geospoc/v-grid-layout/commits?author=swaprenge" title="Code">💻</a> <a href="#maintenance-swaprenge" title="Maintenance">🚧</a> <a href="#example-swaprenge" title="Examples">💡</a> <a href="https://github.com/geospoc/v-grid-layout/commits?author=swaprenge" title="Tests">⚠️</a> <a href="https://github.com/geospoc/v-grid-layout/commits?author=swaprenge" title="Documentation">📖</a></td>
   </tr>
 </table>
 
