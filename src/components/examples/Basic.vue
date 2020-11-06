@@ -22,6 +22,9 @@
       :tabs="item.tabs"
       :drag-ignore-from="'.content'"
     >
+      <div v-if="item.i === '0'" class="content">
+        this area is not draggable
+      </div>
     </grid-item>
   </grid-layout>
 </template>
