@@ -365,6 +365,7 @@
         }
 
         // Move the element to the dragged location.
+        // eslint-disable-next-line vue/no-mutating-props
         props.layout = moveElement(
           props.layout,
           l,
