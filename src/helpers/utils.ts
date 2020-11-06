@@ -1,20 +1,21 @@
+import { provide, inject } from '@vue/composition-api';
 // @flow
 export type LayoutItemRequired = {
-  w: number,
-  h: number,
-  x: number,
-  y: number,
-  i: string,
+  w: number;
+  h: number;
+  x: number;
+  y: number;
+  i: string;
 };
 export type LayoutItem = LayoutItemRequired & {
-  minW?: number,
-  minH?: number,
-  maxW?: number,
-  maxH?: number,
-  moved?: boolean,
-  static?: boolean,
-  isDraggable?: ?boolean,
-  isResizable?: ?boolean,
+  minW?: number;
+  minH?: number;
+  maxW?: number;
+  maxH?: number;
+  moved?: boolean;
+  static?: boolean;
+  isDraggable?: ?boolean;
+  isResizable?: ?boolean;
 };
 export type Layout = Array<LayoutItem>;
 // export type Position = {left: number, top: number, width: number, height: number};
@@ -27,7 +28,7 @@ export type DragCallbackData = {
 };
 */
 // export type DragEvent = {e: Event} & DragCallbackData;
-export type Size = { width: number, height: number };
+export type Size = { width: number; height: number };
 // export type ResizeEvent = {e: Event, node: HTMLElement, size: Size};
 
 // const isProduction = process.env.NODE_ENV === 'production';
@@ -644,4 +645,16 @@ export function findAndRemove(array, property, value) {
       array.splice(index, 1);
     }
   });
+}
+
+export function provideEventBus(value) {
+  provide('eventBus', value);
+}
+export function useEventBus() {
+  const eventBus = inject('eventBus', null);
+  if (!eventBus) {
+    return null;
+  } else {
+    return eventBus;
+  }
 }
