@@ -1,0 +1,10 @@
+{
+  "title": "V-grid-layout documentation",
+  "url": "https://content.nuxtjs.org",
+  "logo": {
+    "light": "/logo-light.svg",
+    "dark": "/logo-dark.svg"
+  },
+  "github": "nuxt/content",
+  "twitter": "@nuxt_js"
+}
