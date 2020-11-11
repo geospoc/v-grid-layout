@@ -1,10 +1,11 @@
 {
   "title": "V-grid-layout documentation",
-  "url": "https://content.nuxtjs.org",
+  "url": "https://geospoc.github.io/v-grid-layout",
   "logo": {
-    "light": "/logo-light.svg",
-    "dark": "/logo-dark.svg"
+    "light": "/v-grid-layout/logo-light.svg",
+    "dark": "/v-grid-layout/logo-dark.svg"
   },
-  "github": "nuxt/content",
-  "twitter": "@nuxt_js"
+  "github": "geospoc/v-grid-layout",
+  "twitter": "@geospoc",
+  "defaultBranch": "main"
 }
