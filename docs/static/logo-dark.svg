@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="511.6" height="284.974">
+  <g data-name="Group 1">
+    <g data-name="Group 324">
+      <g data-name="Group 323">
+        <path data-name="Path 36243" d="M340.512 81.07A81.07 81.07 0 11259.439 0a81.071 81.071 0 0181.073 81.07z" fill="#2a5c3c"/>
+        <path data-name="Path 36244" d="M283.395 53.781a23.953 23.953 0 00-47.907 0c0 .391.011.782.034 1.167l-.034-.026c.635 14.894 14.04 24.92 18.252 33.517 4.419 9.022 5.7 30.009 5.7 30.009s1.285-20.986 5.707-30.009c4.209-8.6 17.619-18.623 18.249-33.517l-.029.026c.016-.385.028-.777.028-1.167z" fill="#fff"/>
+        <path data-name="Path 36245" d="M271.288 54.747a11.846 11.846 0 11-11.849-11.843 11.844 11.844 0 0111.849 11.843z" fill="#2a5c3c"/>
+      </g>
+      <text transform="translate(0 254.974)" fill="gray" font-size="120" font-family="AvantGardeExtLitITC">
+        <tspan x="0" y="15">GeoSpoc</tspan>
+      </text>
+      <g data-name="Group 325" transform="translate(492.876 237.5)">
+        <circle data-name="Ellipse 2" cx="9.062" cy="9.062" r="9.062" fill="none" stroke="gray" stroke-miterlimit="10" stroke-width="1.2"/>
+        <text transform="translate(4.5 13.5)" fill="gray" font-size="12" font-family="ArialMT, Arial">
+          <tspan x="0" y="0">R</tspan>
+        </text>
+      </g>
+    </g>
+  </g>
+</svg>
