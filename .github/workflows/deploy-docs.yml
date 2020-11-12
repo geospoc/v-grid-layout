@@ -4,29 +4,6 @@ on:
     branches:
       - main
 jobs:
-  build-and-deploy-docs:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout 🛎️
-        uses: actions/checkout@v2.3.1 # If you're using actions/checkout@v2 you must set persist-credentials to false in most cases for the deployment to work correctly.
-        with:
-          persist-credentials: false
-
-      - name: Install and Build docs 🔧
-        run: |
-          cd docs
-          npm install
-          npm run generate
-
-      - name: Deploy 🚀
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages
-          publish_dir: ./docs/dist
-          user_name: 'github-actions[bot]'
-          user_email: 'github-actions[bot]@users.noreply.github.com'
-
   build-and-deploy-storybook:
     runs-on: ubuntu-latest
     steps:
@@ -62,6 +39,5 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
           publish_dir: ./storybook
-          destination_dir: ./docs/storybook
           user_name: 'github-actions[bot]'
           user_email: 'github-actions[bot]@users.noreply.github.com'
