@@ -1,0 +1,10 @@
+{
+  "name": "v-grid-layout-docs",
+  "short_name": "v-grid-layout-docs",
+  "icons": [],
+  "start_url": "/v-grid-layout/?standalone=true",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#41B883",
+  "lang": "en"
+}
