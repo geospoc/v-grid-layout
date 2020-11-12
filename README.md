@@ -9,7 +9,7 @@
 - `v-grid-layout` is a grid layout system, like [Gridster](http://dsmorse.github.io/gridster.js/), for Vue. 
 - This is a bare-clone fork of [`vue-grid-layout`](https://github.com/jbaysolutions/vue-grid-layout) which supports nesting the `GridItem` inside any other component(s)
 
-[**[Demo](https://jbaysolutions.github.io/vue-grid-layout/examples/01-basic.html) | [Changelog](/CHANGELOG.md)**]
+[**[Demo](https://geospoc.github.io/v-grid-layout) | [Docs](https://v-grid-layout.netlify.app/) | [Changelog](/CHANGELOG.md)**]
 
 ## Features
 
