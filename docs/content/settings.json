@@ -1,0 +1,11 @@
+{
+  "title": "V-grid-layout documentation",
+  "url": "https://geospoc.github.io/v-grid-layout",
+  "logo": {
+    "light": "/v-grid-layout/logo-light.svg",
+    "dark": "/v-grid-layout/logo-dark.svg"
+  },
+  "github": "geospoc/v-grid-layout",
+  "twitter": "@geospoc",
+  "defaultBranch": "main"
+}
