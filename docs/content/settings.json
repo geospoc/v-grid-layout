@@ -1,9 +1,9 @@
 {
   "title": "V-grid-layout documentation",
-  "url": "https://geospoc.github.io/v-grid-layout",
+  "url": "https://v-grid-layout.netlify.app/",
   "logo": {
-    "light": "/v-grid-layout/logo-light.svg",
-    "dark": "/v-grid-layout/logo-dark.svg"
+    "light": "/logo-light.svg",
+    "dark": "/logo-dark.svg"
   },
   "github": "geospoc/v-grid-layout",
   "twitter": "@geospoc",
