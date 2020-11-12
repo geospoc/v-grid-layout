@@ -1,10 +1,10 @@
-name: Build and Deploy Documentation
+name: Build and Deploy Docs
 on:
   push:
     branches:
       - main
 jobs:
-  build-and-deploy:
+  build-and-deploy-docs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
@@ -12,7 +12,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Install and Build 🔧 # This example project is built using npm and outputs the result to the 'build' folder. Replace with the commands required to build your project, or remove this step entirely if your site is pre-built.
+      - name: Install and Build docs 🔧
         run: |
           cd docs
           npm install
@@ -23,6 +23,46 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          publish_dir: dist
+          publish_dir: ./docs/dist
+          destination_dir: ./docs/dist
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+
+  build-and-deploy-storybook:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2.3.1
+
+      - name: Setup node env 🏗
+        uses: actions/setup-node@v2.1.2
+        with:
+          node-version: ${{ matrix.node }}
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@geospoc'
+
+      - name: Cached node_modules ⚡️
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: ${{ runner.os }}-node-
+      
+      - name: Install dependencies 👨🏻‍💻
+        run: npm ci
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.READ_PAT }}
+
+      - name: Build stories 🔧 
+        run: |
+          npm run publish-stories
+
+      - name: Deploy 🚀
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: ./storybook
+          destination_dir: ./docs/storybook
           user_name: 'github-actions[bot]'
           user_email: 'github-actions[bot]@users.noreply.github.com'
