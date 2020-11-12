@@ -22,7 +22,8 @@
     "lint:prettier": "prettier --check \"{,!(node_modules|dist|examples|docs)/**/}*.{js,vue}\"",
     "lint:prettier:fix": "prettier --write \"{,!(node_modules|dist|examples|docs)/**/}*.{js,vue}\"",
     "release": "shipjs prepare",
-    "storybook": "start-storybook"
+    "storybook": "start-storybook",
+    "publish-stories": "build-storybook -o ./storybook"
   },
   "dependencies": {
     "@vue/composition-api": "^1.0.0-beta.14",
