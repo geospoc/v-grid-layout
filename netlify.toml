@@ -1,3 +1,0 @@
-[build]
-  command = "cd ./docs && npm install && npm run generate"
-  publish = "docs/dist"
