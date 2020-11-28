@@ -28,6 +28,8 @@
     useLayout,
   } from '@/helpers/utils';
   import { getControlPosition, createCoreData } from '@/helpers/draggableUtils';
+  import { getColsFromBreakpoint } from '@/helpers/responsiveUtils';
+
   import { getDocumentDir } from '@/helpers/DOM';
   //    var eventBus = require('./eventBus');
   import '@interactjs/auto-start';
@@ -399,7 +401,14 @@
         }
       });
       onMounted(() => {
-        cols.value = layout.colNum;
+        if (layout.responsive) {
+          cols.value = getColsFromBreakpoint(
+            layout.lastBreakpoint,
+            layout.cols,
+          );
+        } else {
+          cols.value = layout.colNum;
+        }
         rowHeight.value = layout.rowHeight;
         containerWidth.value = layout.width !== null ? layout.width : 100;
 
