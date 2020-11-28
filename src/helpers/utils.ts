@@ -663,3 +663,14 @@ export function useEventBus() {
     return eventBus;
   }
 }
+export function provideLayout(value) {
+  provide('layout', value);
+}
+export function useLayout() {
+  const layout = inject('layout', null);
+  if (!layout) {
+    return null;
+  } else {
+    return layout;
+  }
+}

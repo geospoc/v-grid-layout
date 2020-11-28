@@ -25,6 +25,7 @@
     setTransformRtl,
     setTransform,
     useEventBus,
+    useLayout,
   } from '../helpers/utils';
   import {
     getControlPosition,
@@ -175,6 +176,7 @@
       let activeTab = ref<number>(0);
       let interactObj: any | null = null;
       const eventBus: any = useEventBus();
+      const layout: any = useLayout();
       // computed properties
       let contentTab = computed(() => {
         return props.tabs.filter((tab, idx) => idx === activeTab.value);
@@ -201,7 +203,7 @@
         return navigator.userAgent.toLowerCase().indexOf('android') !== -1;
       });
       const renderRtl = computed(() => {
-        return parent.isMirrored ? !rtl.value : rtl.value;
+        return layout.isMirrored ? !rtl.value : rtl.value;
       });
       const resizableHandleClass = computed(() => {
         if (renderRtl.value) {
@@ -395,24 +397,24 @@
         }
       });
       onMounted(() => {
-        cols.value = parent.colNum;
-        rowHeight.value = parent.rowHeight;
-        containerWidth.value = parent.width !== null ? parent.width : 100;
+        cols.value = layout.colNum;
+        rowHeight.value = layout.rowHeight;
+        containerWidth.value = layout.width !== null ? layout.width : 100;
 
-        margin.value = parent.margin !== undefined ? parent.margin : [10, 10];
-        maxRows.value = parent.maxRows;
+        margin.value = layout.margin !== undefined ? layout.margin : [10, 10];
+        maxRows.value = layout.maxRows;
         if (props.isDraggable === null) {
-          draggable.value = parent.isDraggable;
+          draggable.value = layout.isDraggable;
         } else {
           draggable.value = props.isDraggable;
         }
         if (props.isResizable === null) {
-          resizable.value = parent.isResizable;
+          resizable.value = layout.isResizable;
         } else {
           resizable.value = props.isResizable;
         }
-        useCssTransforms.value = parent.useCssTransforms;
-        useStyleCursor.value = parent.useStyleCursor;
+        useCssTransforms.value = layout.useCssTransforms;
+        useStyleCursor.value = layout.useStyleCursor;
         createStyle();
       });
       function createStyle() {

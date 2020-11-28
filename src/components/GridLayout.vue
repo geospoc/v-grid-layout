@@ -22,6 +22,7 @@
     onBeforeMount,
     onMounted,
     onBeforeUnmount,
+    getCurrentInstance,
   } from '@vue/composition-api';
   import elementResizeDetectorMaker from 'element-resize-detector';
   import {
@@ -34,6 +35,7 @@
     getAllCollisions,
     provideEventBus,
     useEventBus,
+    provideLayout,
   } from '../helpers/utils';
   import {
     getBreakpointFromWidth,
@@ -133,6 +135,7 @@
     },
     setup(props: any, { root, emit }: any) {
       provideEventBus(new Vue());
+      provideLayout(getCurrentInstance());
       const eventBus: any = useEventBus();
       let erd: any = null; //for element resize detetctor
       const width = ref<number>(0);
@@ -263,7 +266,6 @@
 
       onMounted(() => {
         emit('layout-mounted', props.layout);
-        // console.log('root', root);
         root.$nextTick(() => {
           validateLayout(props.layout, '');
           originalLayout = props.layout;
