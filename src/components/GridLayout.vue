@@ -36,18 +36,18 @@
     provideEventBus,
     useEventBus,
     provideLayout,
-  } from '../helpers/utils';
+  } from '@/helpers/utils';
   import {
     getBreakpointFromWidth,
     getColsFromBreakpoint,
     findOrGenerateResponsiveLayout,
-  } from '../helpers/responsiveUtils';
+  } from '@/helpers/responsiveUtils';
   //var eventBus = require('./eventBus');
   import GridItem from './GridItem.vue';
   import {
     addWindowEventListener,
     removeWindowEventListener,
-  } from '../helpers/DOM';
+  } from '@/helpers/DOM';
 
   export default defineComponent({
     name: 'GridLayout',

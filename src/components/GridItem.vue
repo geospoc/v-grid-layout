@@ -26,14 +26,16 @@
     setTransform,
     useEventBus,
     useLayout,
-  } from '../helpers/utils';
-  import {
-    getControlPosition,
-    createCoreData,
-  } from '../helpers/draggableUtils';
-  import { getDocumentDir } from '../helpers/DOM';
+  } from '@/helpers/utils';
+  import { getControlPosition, createCoreData } from '@/helpers/draggableUtils';
+  import { getDocumentDir } from '@/helpers/DOM';
   //    var eventBus = require('./eventBus');
-  import interact from 'interactjs';
+  import '@interactjs/auto-start';
+  import '@interactjs/actions/drag';
+  import '@interactjs/actions/resize';
+  import '@interactjs/modifiers';
+  import '@interactjs/dev-tools';
+  import interact from '@interactjs/interact';
   //  interact = require('interactjs');
   export default defineComponent({
     name: 'GridItem',
