@@ -816,8 +816,8 @@
             preserveAspectRatio: true,
             edges: {
               left: false,
-              right: '.' + resizableHandleClass.value,
-              bottom: '.' + resizableHandleClass.value,
+              right: '.' + resizableHandleClass.value.trim().replace(' ', '.'),
+              bottom: '.' + resizableHandleClass.value.trim().replace(' ', '.'),
               top: false,
             },
             ignoreFrom: props.resizeIgnoreFrom,
