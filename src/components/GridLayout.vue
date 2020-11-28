@@ -22,6 +22,7 @@
     onBeforeMount,
     onMounted,
     onBeforeUnmount,
+    getCurrentInstance,
   } from '@vue/composition-api';
   import elementResizeDetectorMaker from 'element-resize-detector';
   import {
@@ -34,18 +35,19 @@
     getAllCollisions,
     provideEventBus,
     useEventBus,
-  } from '../helpers/utils';
+    provideLayout,
+  } from '@/helpers/utils';
   import {
     getBreakpointFromWidth,
     getColsFromBreakpoint,
     findOrGenerateResponsiveLayout,
-  } from '../helpers/responsiveUtils';
+  } from '@/helpers/responsiveUtils';
   //var eventBus = require('./eventBus');
   import GridItem from './GridItem.vue';
   import {
     addWindowEventListener,
     removeWindowEventListener,
-  } from '../helpers/DOM';
+  } from '@/helpers/DOM';
 
   export default defineComponent({
     name: 'GridLayout',
@@ -126,9 +128,14 @@
         type: Boolean,
         default: false,
       },
+      useStyleCursor: {
+        type: Boolean,
+        default: true,
+      },
     },
     setup(props: any, { root, emit }: any) {
       provideEventBus(new Vue());
+      provideLayout(getCurrentInstance());
       const eventBus: any = useEventBus();
       let erd: any = null; //for element resize detetctor
       const width = ref<number>(0);
@@ -259,7 +266,6 @@
 
       onMounted(() => {
         emit('layout-mounted', props.layout);
-        // console.log('root', root);
         root.$nextTick(() => {
           validateLayout(props.layout, '');
           originalLayout = props.layout;
@@ -505,7 +511,14 @@
         //Combine the two arrays of unique entries#
         return uniqueResultOne.concat(uniqueResultTwo);
       }
-      return { placeholder, mergedStyle, isDragging, gridLayout, width };
+      return {
+        placeholder,
+        mergedStyle,
+        isDragging,
+        gridLayout,
+        width,
+        lastBreakpoint,
+      };
     },
   });
 </script>

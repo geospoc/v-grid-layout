@@ -25,14 +25,19 @@
     setTransformRtl,
     setTransform,
     useEventBus,
-  } from '../helpers/utils';
-  import {
-    getControlPosition,
-    createCoreData,
-  } from '../helpers/draggableUtils';
-  import { getDocumentDir } from '../helpers/DOM';
+    useLayout,
+  } from '@/helpers/utils';
+  import { getControlPosition, createCoreData } from '@/helpers/draggableUtils';
+  import { getColsFromBreakpoint } from '@/helpers/responsiveUtils';
+
+  import { getDocumentDir } from '@/helpers/DOM';
   //    var eventBus = require('./eventBus');
-  import interact from 'interactjs';
+  import '@interactjs/auto-start';
+  import '@interactjs/actions/drag';
+  import '@interactjs/actions/resize';
+  import '@interactjs/modifiers';
+  import '@interactjs/dev-tools';
+  import interact from '@interactjs/interact';
   //  interact = require('interactjs');
   export default defineComponent({
     name: 'GridItem',
@@ -149,6 +154,7 @@
       const draggable = ref<boolean>(false);
       const resizable = ref<boolean>(false);
       const useCssTransforms = ref(true);
+      const useStyleCursor = ref(true);
 
       const isDragging = ref(false);
       const dragging = ref<any>({});
@@ -174,6 +180,7 @@
       let activeTab = ref<number>(0);
       let interactObj: any | null = null;
       const eventBus: any = useEventBus();
+      const layout: any = useLayout();
       // computed properties
       let contentTab = computed(() => {
         return props.tabs.filter((tab, idx) => idx === activeTab.value);
@@ -200,7 +207,7 @@
         return navigator.userAgent.toLowerCase().indexOf('android') !== -1;
       });
       const renderRtl = computed(() => {
-        return parent.isMirrored ? !rtl.value : rtl.value;
+        return layout.isMirrored ? !rtl.value : rtl.value;
       });
       const resizableHandleClass = computed(() => {
         if (renderRtl.value) {
@@ -394,23 +401,31 @@
         }
       });
       onMounted(() => {
-        cols.value = parent.colNum;
-        rowHeight.value = parent.rowHeight;
-        containerWidth.value = parent.width !== null ? parent.width : 100;
+        if (layout.responsive && layout.lastBreakpoint) {
+          cols.value = getColsFromBreakpoint(
+            layout.lastBreakpoint,
+            layout.cols,
+          );
+        } else {
+          cols.value = layout.colNum;
+        }
+        rowHeight.value = layout.rowHeight;
+        containerWidth.value = layout.width !== null ? layout.width : 100;
 
-        margin.value = parent.margin !== undefined ? parent.margin : [10, 10];
-        maxRows.value = parent.maxRows;
+        margin.value = layout.margin !== undefined ? layout.margin : [10, 10];
+        maxRows.value = layout.maxRows;
         if (props.isDraggable === null) {
-          draggable.value = parent.isDraggable;
+          draggable.value = layout.isDraggable;
         } else {
           draggable.value = props.isDraggable;
         }
         if (props.isResizable === null) {
-          resizable.value = parent.isResizable;
+          resizable.value = layout.isResizable;
         } else {
           resizable.value = props.isResizable;
         }
-        useCssTransforms.value = parent.useCssTransforms;
+        useCssTransforms.value = layout.useCssTransforms;
+        useStyleCursor.value = layout.useStyleCursor;
         createStyle();
       });
       function createStyle() {
@@ -775,6 +790,9 @@
       function tryMakeDraggable() {
         if (interactObj === null || interactObj === undefined) {
           interactObj = interact(gridItem.value);
+          if (!useStyleCursor.value) {
+            interactObj.styleCursor(false);
+          }
         }
         if (draggable.value && !props.static) {
           const opts = {
@@ -797,6 +815,9 @@
       function tryMakeResizable() {
         if (interactObj === null || interactObj === undefined) {
           interactObj = interact(gridItem.value);
+          if (!useStyleCursor.value) {
+            interactObj.styleCursor(false);
+          }
         }
         if (resizable.value && !props.static) {
           let maximum = calcPosition(0, 0, props.maxW, props.maxH);
@@ -806,8 +827,8 @@
             preserveAspectRatio: true,
             edges: {
               left: false,
-              right: '.' + resizableHandleClass.value,
-              bottom: '.' + resizableHandleClass.value,
+              right: '.' + resizableHandleClass.value.trim().replace(' ', '.'),
+              bottom: '.' + resizableHandleClass.value.trim().replace(' ', '.'),
               top: false,
             },
             ignoreFrom: props.resizeIgnoreFrom,
