@@ -149,6 +149,7 @@
       const draggable = ref<boolean>(false);
       const resizable = ref<boolean>(false);
       const useCssTransforms = ref(true);
+      const useStyleCursor = ref(true);
 
       const isDragging = ref(false);
       const dragging = ref<any>({});
@@ -411,6 +412,7 @@
           resizable.value = props.isResizable;
         }
         useCssTransforms.value = parent.useCssTransforms;
+        useStyleCursor.value = parent.useStyleCursor;
         createStyle();
       });
       function createStyle() {
@@ -775,6 +777,9 @@
       function tryMakeDraggable() {
         if (interactObj === null || interactObj === undefined) {
           interactObj = interact(gridItem.value);
+          if (!useStyleCursor.value) {
+            interactObj.styleCursor(false);
+          }
         }
         if (draggable.value && !props.static) {
           const opts = {
@@ -797,6 +802,9 @@
       function tryMakeResizable() {
         if (interactObj === null || interactObj === undefined) {
           interactObj = interact(gridItem.value);
+          if (!useStyleCursor.value) {
+            interactObj.styleCursor(false);
+          }
         }
         if (resizable.value && !props.static) {
           let maximum = calcPosition(0, 0, props.maxW, props.maxH);

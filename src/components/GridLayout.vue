@@ -126,6 +126,10 @@
         type: Boolean,
         default: false,
       },
+      useStyleCursor: {
+        type: Boolean,
+        default: true,
+      },
     },
     setup(props: any, { root, emit }: any) {
       provideEventBus(new Vue());
