@@ -401,7 +401,7 @@
         }
       });
       onMounted(() => {
-        if (layout.responsive) {
+        if (layout.responsive && layout.lastBreakpoint) {
           cols.value = getColsFromBreakpoint(
             layout.lastBreakpoint,
             layout.cols,
