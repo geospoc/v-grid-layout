@@ -45,7 +45,7 @@
     "@rollup/plugin-node-resolve": "^11.0.1",
     "@storybook/vue": "^6.1.11",
     "@typescript-eslint/parser": "^4.10.0",
-    "@vue/test-utils": "^1.1.1",
+    "@vue/test-utils": "^1.1.2",
     "ava": "^3.14.0",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.2.2",
