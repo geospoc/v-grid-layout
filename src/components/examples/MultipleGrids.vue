@@ -54,9 +54,9 @@
 <script>
   import GridLayout from '@/components/GridLayout';
   import GridItem from '@/components/GridItem';
-  import { ref, watch } from '@vue/composition-api';
+  import { defineComponent, ref, watch } from '@vue/composition-api';
 
-  export default {
+  export default defineComponent({
     components: {
       GridLayout,
       GridItem,
@@ -197,7 +197,7 @@
         layoutUpdatedEvent,
       };
     },
-  };
+  });
 </script>
 
 <style scoped>

@@ -43,9 +43,9 @@
 <script>
   import GridLayout from '@/components/GridLayout';
   import GridItem from '@/components/GridItem';
-  import { onMounted, ref, watch } from '@vue/composition-api';
+  import { defineComponent, onMounted, ref, watch } from '@vue/composition-api';
 
-  export default {
+  export default defineComponent({
     components: {
       GridLayout,
       GridItem,
@@ -203,7 +203,7 @@
         layoutUpdatedEvent,
       };
     },
-  };
+  });
 </script>
 
 <style scoped>
