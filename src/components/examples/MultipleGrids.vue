@@ -65,11 +65,11 @@
     setup() {
       // Event Log
       const eventLog = ref([]);
-
+      const eventsDiv = ref(null);
       watch(
         eventLog,
         () => {
-          const eventsDiv = this.$refs.eventsDiv;
+          const eventsDiv = eventsDiv.value;
           eventsDiv.scrollTop = eventsDiv.scrollHeight;
         },
         {

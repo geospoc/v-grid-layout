@@ -69,6 +69,7 @@
       // Mouse X Y
       const mouseXY = { x: null, y: null };
       const gridlayout = ref(null);
+      const colNum = undefined;
 
       onMounted(() => {
         document.addEventListener(
@@ -115,8 +116,8 @@
           layout.value.findIndex((item) => item.i === 'drop') === -1
         ) {
           layout.value.push({
-            x: (layout.value.length * 2) % (this.colNum || 12),
-            y: layout.value.length + (this.colNum || 12), // puts it at the bottom
+            x: (layout.value.length * 2) % (colNum || 12),
+            y: layout.value.length + (colNum || 12), // puts it at the bottom
             w: 1,
             h: 1,
             i: 'drop',
@@ -205,9 +206,9 @@
                       h: 1,
                       i: DragPos.i,
                   });
-                  this.$refs.gridLayout.dragEvent('dragend', DragPos.i, DragPos.x,DragPos.y,1,1);
+                  gridLayout.value.dragEvent('dragend', DragPos.i, DragPos.x,DragPos.y,1,1);
                   try {
-                      this.$refs.gridLayout.$children[layout.value.length].$refs.item.style.display="block";
+                      gridLayout.value.$children[layout.value.length].$refs.item.style.display="block";
                   } catch {
                   }
                   */
