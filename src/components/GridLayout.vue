@@ -505,7 +505,14 @@
         //Combine the two arrays of unique entries#
         return uniqueResultOne.concat(uniqueResultTwo);
       }
-      return { placeholder, mergedStyle, isDragging, gridLayout, width };
+      return {
+        placeholder,
+        mergedStyle,
+        isDragging,
+        gridLayout,
+        width,
+        dragEvent,
+      };
     },
   });
 </script>

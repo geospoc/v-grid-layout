@@ -887,6 +887,7 @@
         resizableAndNotStatic,
         resizableHandleClass,
         classObj,
+        calcXY,
       };
     },
   });
