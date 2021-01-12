@@ -39,7 +39,7 @@ jobs:
       - name: Install dependencies 👨🏻‍💻
         run: npm ci
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.READ_PAT }}
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run linter 👀
         run: npm run lint
