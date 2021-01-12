@@ -2,6 +2,7 @@ import babel from '@rollup/plugin-babel';
 import commonjs from '@rollup/plugin-commonjs';
 import alias from '@rollup/plugin-alias';
 import resolve from '@rollup/plugin-node-resolve';
+import scss from 'rollup-plugin-scss';
 import vue from 'rollup-plugin-vue';
 import typescript from 'rollup-plugin-typescript2';
 
@@ -13,8 +14,11 @@ const plugins = [
     babelHelpers: 'bundled',
     exclude: 'node_modules/**',
   }),
-  commonjs(),
-  vue(),
+  commonjs({
+    include: 'node_modules/**',
+  }),
+  scss({ output: 'dist/v-grid-layout.css' }),
+  vue({ css: false }),
   typescript({
     include: [/\.tsx?$/, /\.vue\?.*?lang=ts/],
     useTsconfigDeclarationDir: true,
