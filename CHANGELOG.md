@@ -1,3 +1,12 @@
+## [1.1.1](https://github.com/geospoc/v-grid-layout/compare/v1.1.0...v1.1.1) (2021-01-12)
+
+
+### Bug Fixes
+
+* call vue-component inside install function ([677290b](https://github.com/geospoc/v-grid-layout/commit/677290b89cf39d56a89dfcdf778f83e2fd0f2d0b))
+
+
+
 # [1.1.0](https://github.com/geospoc/v-grid-layout/compare/v1.0.1...v1.1.0) (2021-01-12)
 
 
