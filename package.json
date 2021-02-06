@@ -29,7 +29,7 @@
     "@vue/composition-api": "^1.0.0-rc.1",
     "core-js": "^3.8.3",
     "element-resize-detector": "^1.2.1",
-    "interactjs": "^1.10.2"
+    "interactjs": "^1.10.3"
   },
   "devDependencies": {
     "@ava/babel": "^1.0.1",
