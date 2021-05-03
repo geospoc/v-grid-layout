@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@vue/composition-api": "^1.0.0-rc.6",
-    "core-js": "^3.10.1",
+    "core-js": "^3.11.2",
     "element-resize-detector": "^1.2.2",
     "interactjs": "^1.10.11"
   },
@@ -51,7 +51,7 @@
     "babel-loader": "^8.2.2",
     "babel-plugin-module-resolver": "^4.1.0",
     "babel-preset-vue": "^2.0.2",
-    "eslint": "^7.24.0",
+    "eslint": "^7.25.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-config-vue": "^2.0.2",
     "eslint-plugin-prettier": "^3.3.1",
