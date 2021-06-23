@@ -35,7 +35,7 @@
     "@ava/babel": "^1.0.1",
     "@babel/core": "^7.14.3",
     "@babel/preset-env": "^7.14.7",
-    "@babel/preset-flow": "^7.13.13",
+    "@babel/preset-flow": "^7.14.5",
     "@commitlint/cli": "^12.1.4",
     "@commitlint/config-conventional": "^12.1.4",
     "@geospoc/prettier-config-standard": "^1.0.1",
