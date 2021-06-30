@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@vue/composition-api": "^1.0.0-rc.12",
-    "core-js": "^3.15.1",
+    "core-js": "^3.15.2",
     "element-resize-detector": "^1.2.2",
     "interactjs": "^1.10.11"
   },
