@@ -26,7 +26,7 @@
     "publish-stories": "build-storybook -o ./storybook"
   },
   "dependencies": {
-    "@vue/composition-api": "^1.1.1",
+    "@vue/composition-api": "^1.1.2",
     "core-js": "^3.16.2",
     "element-resize-detector": "^1.2.3",
     "interactjs": "^1.10.11"
