@@ -36,7 +36,7 @@
     "@babel/core": "^7.15.5",
     "@babel/preset-env": "^7.15.6",
     "@babel/preset-flow": "^7.14.5",
-    "@commitlint/cli": "^13.2.0",
+    "@commitlint/cli": "^13.2.1",
     "@commitlint/config-conventional": "^13.2.0",
     "@geospoc/prettier-config-standard": "^1.0.1",
     "@rollup/plugin-alias": "^3.1.5",
