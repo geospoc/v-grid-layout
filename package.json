@@ -68,7 +68,7 @@
     "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-typescript2": "^0.31.1",
     "rollup-plugin-vue": "^6.0.0",
-    "shipjs": "^0.24.0",
+    "shipjs": "^0.24.1",
     "typescript": "^4.5.4",
     "vue": "^2.6.14",
     "vue-loader": "^16.8.3",
